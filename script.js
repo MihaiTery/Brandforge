@@ -1,39 +1,39 @@
 const fieldSets = {
   brand: [
-    ["Nume firma", "text", true],
-    ["Character obligatoriu", "file", true],
-    ["Logo optional", "file", false],
+    ["Nume firma / brand", "text", true],
     ["Nisa business", "text", true],
     ["Titlu reel", "text", true],
-    ["CTA vocal", "file", true],
-    ["Email", "email", true]
+    ["Email pentru livrare", "email", true],
+    ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
+    ["Logo optional", "file:logo", false],
+    ["Incarca CTA vocal de 3-5 secunde", "file:audio", true, "full-span"]
   ],
   serviciu: [
     ["Nume firma", "text", true],
-    ["Character obligatoriu", "file", true],
-    ["Logo optional", "file", false],
-    ["Explicatie scurta serviciu", "text", true],
     ["Titlu reel", "text", true],
-    ["CTA vocal", "file", true],
-    ["Email", "email", true]
+    ["Explicatie scurta serviciu", "textarea", true, "full-span"],
+    ["Email pentru livrare", "email", true, "full-span"],
+    ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
+    ["Logo optional", "file:logo", false],
+    ["Incarca CTA vocal de 3-5 secunde", "file:audio", true, "full-span"]
   ],
   produs: [
     ["Nume firma", "text", true],
-    ["Character obligatoriu", "file", true],
-    ["Logo optional", "file", false],
-    ["Poza produs", "file", true],
     ["Nume produs", "text", true],
     ["Titlu reel", "text", true],
-    ["CTA vocal", "file", true],
-    ["Email", "email", true]
+    ["Email pentru livrare", "email", true],
+    ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
+    ["Incarca poza produs", "file:image", true],
+    ["Logo optional", "file:logo", false],
+    ["Incarca CTA vocal de 3-5 secunde", "file:audio", true]
   ],
   creator: [
-    ["Nume creator", "text", true],
-    ["Character obligatoriu", "file", true],
+    ["Nume creator / nume cont", "text", true],
     ["Stil vizual", "select", true],
     ["Titlu reel", "text", true],
-    ["CTA vocal", "file", true],
-    ["Email", "email", true]
+    ["Email pentru livrare", "email", true],
+    ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
+    ["Incarca CTA vocal de 3-5 secunde", "file:audio", true]
   ]
 };
 
@@ -60,27 +60,40 @@ function fieldId(label) {
 }
 
 function uploadHint(label) {
-  if (label.includes("CTA")) return "Audio scurt, 3-5 secunde";
-  if (label.includes("Logo")) return "PNG/SVG, optional";
-  if (label.includes("Poza")) return "Imagine produs";
-  return "Imagine character/produs";
+  if (label.includes("CTA")) return "Accepta: .mp3, .wav, .m4a";
+  if (label.includes("Logo")) return "Accepta: .jpg, .jpeg, .png, .svg, .webp";
+  return "Accepta: .jpg, .jpeg, .png, .webp";
 }
 
-function createField(label, inputType, required) {
+function uploadTitle(label) {
+  if (label.includes("CTA")) return "Incarca CTA vocal";
+  if (label.includes("Logo")) return "Incarca logo";
+  if (label.includes("poza produs")) return "Incarca poza produs";
+  return "Incarca imagine";
+}
+
+function fileAccept(inputType) {
+  if (inputType === "file:audio") return ".mp3,.wav,.m4a,audio/mpeg,audio/wav,audio/x-m4a,audio/mp4";
+  if (inputType === "file:logo") return ".jpg,.jpeg,.png,.svg,.webp,image/jpeg,image/png,image/svg+xml,image/webp";
+  return ".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp";
+}
+function createField(label, inputType, required, layoutClass = "") {
   const id = fieldId(label);
   const wrapper = document.createElement("div");
-  wrapper.className = inputType === "file" ? "field drop-field" : "field";
-  if (inputType === "text" && label.length > 18) wrapper.classList.add("field-full");
+  const isFile = inputType.startsWith("file");
+  wrapper.className = isFile ? "field drop-field" : "field";
+  if (layoutClass) wrapper.classList.add(layoutClass);
 
   const labelEl = document.createElement("label");
   labelEl.htmlFor = id;
   labelEl.textContent = `${label}${required ? " *" : ""}`;
 
-  if (inputType === "file") {
+  if (isFile) {
     const input = document.createElement("input");
     input.id = id;
     input.name = id;
     input.type = "file";
+    input.accept = fileAccept(inputType);
     input.required = required;
 
     const visual = document.createElement("label");
@@ -88,12 +101,12 @@ function createField(label, inputType, required) {
     visual.htmlFor = id;
     visual.innerHTML = `
       <span class="drop-icon">+</span>
-      <span><strong>${label}</strong><small>${uploadHint(label)}</small></span>
+      <span><strong>${uploadTitle(label)}</strong><small>${uploadHint(label)}</small></span>
     `;
 
     input.addEventListener("change", () => {
       wrapper.classList.toggle("selected", input.files.length > 0);
-      visual.querySelector("strong").textContent = input.files[0]?.name || label;
+      visual.querySelector("strong").textContent = input.files[0]?.name || uploadTitle(label);
     });
 
     wrapper.append(labelEl, input, visual);
@@ -109,10 +122,14 @@ function createField(label, inputType, required) {
       option.textContent = style;
       input.append(option);
     });
+  } else if (inputType === "textarea") {
+    input = document.createElement("textarea");
+    input.rows = 3;
+    input.setAttribute("aria-label", label);
   } else {
     input = document.createElement("input");
     input.type = inputType;
-    input.placeholder = label;
+    input.setAttribute("aria-label", label);
   }
 
   input.id = id;
@@ -227,10 +244,12 @@ document.querySelectorAll("input[name='type']").forEach((radio) => {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  const state = form.querySelector(".mock-state");
-  state.textContent = form.checkValidity()
-    ? "Mock Phase 1: consola arata valida vizual. Plata si generarea vin in Phase 2."
-    : "Completeaza campurile marcate cu * pentru preview-ul de validare.";
+  const state = form.querySelector(".form-state");
+  if (state) {
+    state.textContent = form.checkValidity()
+      ? "Am primit detaliile pentru reel. Reel-ul final va fi livrat pe email."
+      : "Completeaza campurile marcate cu * pentru tipul de reel ales.";
+  }
 });
 
 prevPanelButton?.addEventListener("click", () => {
@@ -283,3 +302,7 @@ window.addEventListener("scroll", resetInactivity, { passive: true });
 renderFields("brand");
 setPanel(0);
 resetInactivity();
+
+
+
+
