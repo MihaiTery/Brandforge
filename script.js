@@ -55,21 +55,6 @@ const burnStartDelay = 43000;
 const burnStepDelay = 5000;
 const maxBurnLevel = 6;
 
-function resolveInternalRoutes() {
-  const path = window.location.pathname;
-  const base = path.toLowerCase().startsWith("/brandforge") ? "/BrandForge/" : "/";
-
-  document.querySelectorAll("[data-route]").forEach((link) => {
-    const target = link.dataset.route || "";
-    if (target.startsWith("#")) {
-      link.href = `${base}${target}`;
-      return;
-    }
-
-    link.href = `${base}${target}`.replace(/\/{2,}/g, "/");
-  });
-}
-
 function fieldId(label) {
   return label.toLowerCase().replaceAll(" ", "-").replace(/[^a-z0-9-]/g, "");
 }
@@ -316,7 +301,6 @@ window.addEventListener("scroll", () => {
 window.addEventListener("pointermove", resetInactivity, { passive: true });
 window.addEventListener("scroll", resetInactivity, { passive: true });
 
-resolveInternalRoutes();
 if (form && dynamicFields) renderFields("brand");
 setPanel(0);
 resetInactivity();
