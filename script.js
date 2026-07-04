@@ -238,6 +238,14 @@ triggers.forEach((trigger) => {
   observer.observe(trigger);
 });
 
+document.querySelectorAll("[data-panel-link]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    resetInactivity();
+    goToPanel(Number(link.dataset.panelLink));
+  });
+});
+
 if (form && dynamicFields) {
   document.querySelectorAll("input[name='type']").forEach((radio) => {
     radio.addEventListener("change", (event) => renderFields(event.target.value, true));
