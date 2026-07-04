@@ -1,7 +1,7 @@
 const fieldSets = {
   brand: [
     ["Nume firma / brand", "text", true],
-    ["Nisa business", "text", true],
+    ["Descriere Business", "text", true],
     ["Titlu reel", "text", true],
     ["Email pentru livrare", "email", true],
     ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
@@ -54,6 +54,21 @@ let burnLevel = 0;
 const burnStartDelay = 43000;
 const burnStepDelay = 5000;
 const maxBurnLevel = 6;
+
+function resolveInternalRoutes() {
+  const path = window.location.pathname;
+  const base = path.toLowerCase().startsWith("/brandforge") ? "/BrandForge/" : "/";
+
+  document.querySelectorAll("[data-route]").forEach((link) => {
+    const target = link.dataset.route || "";
+    if (target.startsWith("#")) {
+      link.href = `${base}${target}`;
+      return;
+    }
+
+    link.href = `${base}${target}`.replace(/\/{2,}/g, "/");
+  });
+}
 
 function fieldId(label) {
   return label.toLowerCase().replaceAll(" ", "-").replace(/[^a-z0-9-]/g, "");
@@ -238,19 +253,21 @@ triggers.forEach((trigger) => {
   observer.observe(trigger);
 });
 
-document.querySelectorAll("input[name='type']").forEach((radio) => {
-  radio.addEventListener("change", (event) => renderFields(event.target.value, true));
-});
+if (form && dynamicFields) {
+  document.querySelectorAll("input[name='type']").forEach((radio) => {
+    radio.addEventListener("change", (event) => renderFields(event.target.value, true));
+  });
 
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const state = form.querySelector(".form-state");
-  if (state) {
-    state.textContent = form.checkValidity()
-      ? "Am primit detaliile pentru reel. Reel-ul final va fi livrat pe email."
-      : "Completeaza campurile marcate cu * pentru tipul de reel ales.";
-  }
-});
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const state = form.querySelector(".form-state");
+    if (state) {
+      state.textContent = form.checkValidity()
+        ? "Am primit detaliile pentru reel. Reel-ul final va fi livrat pe email."
+        : "Completeaza campurile marcate cu * pentru tipul de reel ales.";
+    }
+  });
+}
 
 prevPanelButton?.addEventListener("click", () => {
   resetInactivity();
@@ -299,7 +316,8 @@ window.addEventListener("scroll", () => {
 window.addEventListener("pointermove", resetInactivity, { passive: true });
 window.addEventListener("scroll", resetInactivity, { passive: true });
 
-renderFields("brand");
+resolveInternalRoutes();
+if (form && dynamicFields) renderFields("brand");
 setPanel(0);
 resetInactivity();
 

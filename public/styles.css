@@ -1077,6 +1077,104 @@ legend {
   cursor: pointer;
 }
 
+.order-page {
+  min-height: 100svh;
+}
+
+.order-shell {
+  width: min(1120px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: clamp(9rem, 16vh, 11rem) 0 var(--space-xl);
+}
+
+.order-page .liquid-panel {
+  position: relative;
+  width: 100%;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  overflow-wrap: break-word;
+}
+
+.order-intro {
+  margin: 0 auto var(--space-lg);
+}
+
+.order-intro h1 {
+  max-width: 13ch;
+}
+
+.eyebrow {
+  margin-bottom: var(--space-xs);
+  color: #802206;
+  font-size: .78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.order-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.order-highlights div,
+.order-notes .flow-console div {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,248,212,.62);
+  border-radius: .9rem;
+  padding: var(--space-sm);
+  color: #2a1004;
+  background: linear-gradient(145deg, rgba(255,255,255,.38), rgba(255,205,62,.22), rgba(255,86,12,.12));
+  box-shadow: 0 14px 38px rgba(83,23,0,.15), inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter: blur(14px) saturate(1.25);
+}
+
+.order-highlights strong,
+.order-notes strong {
+  display: block;
+  font-weight: 950;
+}
+
+.order-highlights span,
+.order-notes span {
+  display: block;
+  margin-top: var(--space-xs);
+  color: rgba(31,11,3,.68);
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+.order-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, .8fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.order-form-panel {
+  max-width: none;
+}
+
+.order-notes {
+  padding: 24px;
+}
+
+.order-notes h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.order-notes .flow-console {
+  grid-template-columns: 1fr;
+}
+
+.order-notes .cta-row {
+  margin-top: var(--space-lg);
+}
+
 @media (min-width: 840px) {
   .form-panel .dynamic-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1215,6 +1313,27 @@ legend {
     max-width: calc(100vw - 48px);
   }
 
+  .order-shell {
+    width: min(100%, calc(100vw - 48px));
+    max-width: 342px;
+    padding: 12.2rem 0 var(--space-xl);
+  }
+
+  .order-intro,
+  .order-form-panel,
+  .order-notes {
+    max-width: 100%;
+  }
+
+  .order-layout,
+  .order-highlights {
+    grid-template-columns: 1fr;
+  }
+
+  .order-page .form-panel {
+    max-width: 100%;
+  }
+
   .scroll-triggers {
     display: none;
   }
@@ -1228,6 +1347,11 @@ legend {
   .liquid-panel,
   .form-panel {
     max-width: 342px;
+  }
+
+  .order-page .liquid-panel,
+  .order-page .form-panel {
+    max-width: 100%;
   }
 }
 
