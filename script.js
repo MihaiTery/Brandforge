@@ -46,14 +46,22 @@ const prevPanelButton = document.querySelector(".prev-panel");
 const nextPanelButton = document.querySelector(".next-panel");
 const root = document.documentElement;
 const burstLayer = document.querySelector("#sparkBursts");
+const liteMotionQuery = window.matchMedia("(max-width: 760px), (pointer: coarse), (prefers-reduced-motion: reduce)");
 let activePanel = 0;
 let lastBurst = 0;
 let inactivityTimer;
 let burnTimer;
 let burnLevel = 0;
+let rafToken = 0;
+let pointerX = window.innerWidth / 2;
+let pointerY = window.innerHeight / 2;
+let scrollRatio = 0;
 const burnStartDelay = 43000;
 const burnStepDelay = 5000;
 const maxBurnLevel = 6;
+const isLiteMotion = liteMotionQuery.matches;
+
+if (isLiteMotion) document.body.classList.add("lite-motion");
 
 function fieldId(label) {
   return label.toLowerCase().replaceAll(" ", "-").replace(/[^a-z0-9-]/g, "");
@@ -196,11 +204,11 @@ function resetInactivity() {
   window.clearTimeout(inactivityTimer);
   window.clearInterval(burnTimer);
   applyBurnLevel(0);
-  inactivityTimer = window.setTimeout(beginBurn, burnStartDelay);
+  if (!isLiteMotion) inactivityTimer = window.setTimeout(beginBurn, burnStartDelay);
 }
 
 function burst(x, y) {
-  if (!burstLayer || performance.now() - lastBurst < 420) return;
+  if (isLiteMotion || !burstLayer || performance.now() - lastBurst < 420) return;
   lastBurst = performance.now();
 
   for (let i = 0; i < 10; i += 1) {
@@ -215,18 +223,43 @@ function burst(x, y) {
   }
 }
 
-function updateEnergy(event) {
-  const x = event?.clientX ?? window.innerWidth / 2;
-  const y = event?.clientY ?? window.innerHeight / 2;
-  root.style.setProperty("--mx", (x / window.innerWidth).toFixed(3));
-  root.style.setProperty("--my", (y / window.innerHeight).toFixed(3));
+function flushVisualState() {
+  rafToken = 0;
+  root.style.setProperty("--mx", (pointerX / window.innerWidth).toFixed(3));
+  root.style.setProperty("--my", (pointerY / window.innerHeight).toFixed(3));
+  root.style.setProperty("--scroll", scrollRatio.toFixed(3));
+  root.style.setProperty("--scroll-px", `${window.scrollY}px`);
+
+  if (isLiteMotion) {
+    root.style.setProperty("--energy", Math.min(.58, .28 + scrollRatio * .22).toFixed(3));
+    return;
+  }
 
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight * .44;
-  const distance = Math.hypot(x - centerX, y - centerY);
+  const distance = Math.hypot(pointerX - centerX, pointerY - centerY);
   const proximity = Math.max(0, 1 - distance / Math.min(window.innerWidth, window.innerHeight));
-  root.style.setProperty("--energy", proximity.toFixed(3));
-  if (distance < Math.min(window.innerWidth, window.innerHeight) * .22) burst((x + centerX) / 2, (y + centerY) / 2);
+  root.style.setProperty("--energy", Math.max(proximity, Math.min(.9, .32 + scrollRatio * .55)).toFixed(3));
+  if (distance < Math.min(window.innerWidth, window.innerHeight) * .22) {
+    burst((pointerX + centerX) / 2, (pointerY + centerY) / 2);
+  }
+}
+
+function scheduleVisualState() {
+  if (rafToken) return;
+  rafToken = window.requestAnimationFrame(flushVisualState);
+}
+
+function handlePointerMove(event) {
+  pointerX = event.clientX;
+  pointerY = event.clientY;
+  scheduleVisualState();
+}
+
+function handleScroll() {
+  const max = Math.max(1, document.body.scrollHeight - window.innerHeight);
+  scrollRatio = window.scrollY / max;
+  scheduleVisualState();
 }
 
 triggers.forEach((trigger) => {
@@ -293,24 +326,17 @@ const metricObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll("[data-count]").forEach((metric) => metricObserver.observe(metric));
 
-window.addEventListener("pointermove", updateEnergy, { passive: true });
-window.addEventListener("scroll", () => {
-  const max = Math.max(1, document.body.scrollHeight - window.innerHeight);
-  const scroll = window.scrollY / max;
-  root.style.setProperty("--scroll", scroll.toFixed(3));
-  root.style.setProperty("--scroll-px", `${window.scrollY}px`);
-  root.style.setProperty("--energy", Math.min(.9, .32 + scroll * .55).toFixed(3));
-}, { passive: true });
+if (!isLiteMotion) window.addEventListener("pointermove", handlePointerMove, { passive: true });
+window.addEventListener("scroll", handleScroll, { passive: true });
 
 ["pointerdown", "keydown", "touchstart", "wheel"].forEach((eventName) => {
   window.addEventListener(eventName, resetInactivity, { passive: true });
 });
 
-window.addEventListener("pointermove", resetInactivity, { passive: true });
-window.addEventListener("scroll", resetInactivity, { passive: true });
-
 if (form && dynamicFields) renderFields("brand");
 setPanel(0);
+handleScroll();
+scheduleVisualState();
 resetInactivity();
 
 

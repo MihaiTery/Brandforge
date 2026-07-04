@@ -1355,6 +1355,70 @@ legend {
   }
 }
 
+body.lite-motion .energy-field::before,
+body.lite-motion .field-texture,
+body.lite-motion .core-texture,
+body.lite-motion .central-core::before,
+body.lite-motion .central-core::after,
+body.lite-motion .orbit-ring,
+body.lite-motion .liquid-panel::before,
+body.lite-motion .molten-button::before {
+  animation: none !important;
+}
+
+body.lite-motion .heat-layer,
+body.lite-motion .ambient-sparks,
+body.lite-motion .spark-bursts,
+body.lite-motion .core-a,
+body.lite-motion .core-b,
+body.lite-motion .core-c,
+body.lite-motion .core-d,
+body.lite-motion .gravity-line {
+  display: none;
+}
+
+body.lite-motion .energy-field::before,
+body.lite-motion .field-texture,
+body.lite-motion .central-core,
+body.lite-motion .core-texture {
+  transform: none !important;
+}
+
+body.lite-motion .heat-layer,
+body.lite-motion .field-texture,
+body.lite-motion .energy-core,
+body.lite-motion .liquid-panel::before,
+body.lite-motion .radial-logo img {
+  filter: none !important;
+}
+
+body.lite-motion .energy-field::before,
+body.lite-motion .field-texture,
+body.lite-motion .core-texture {
+  mix-blend-mode: normal;
+}
+
+body.lite-motion .field-texture {
+  opacity: .22;
+  background-size: min(980px, 150vw);
+}
+
+body.lite-motion .central-core {
+  width: min(26rem, 62vw);
+}
+
+body.lite-motion .orbit-ring,
+body.lite-motion .orbit-link,
+body.lite-motion .liquid-panel {
+  backdrop-filter: none !important;
+}
+
+body.lite-motion.burn-active .liquid-panel,
+body.lite-motion.burn-active .liquid-panel::before,
+body.lite-motion.burn-active .liquid-panel::after {
+  animation: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
