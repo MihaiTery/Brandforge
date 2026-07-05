@@ -39,13 +39,6 @@ img { display: block; max-width: 100%; }
 button, input, select { font: inherit; }
 button, input, select, textarea { max-width: 100%; }
 
-.defs {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
-
 .energy-field {
   position: fixed;
   inset: 0;
@@ -55,46 +48,6 @@ button, input, select, textarea { max-width: 100%; }
     radial-gradient(circle at calc(var(--mx) * 100%) calc(var(--my) * 100%), rgba(255,255,255, calc(.74 + var(--energy) * .26)), transparent 10rem),
     radial-gradient(circle at 58% 40%, #fff4a4 0 6rem, rgba(255,139,24,.56) 6.4rem 23rem, transparent 28rem),
     linear-gradient(145deg, #fff2a8 0%, #ffb52e 32%, #f45b17 66%, #ffd968 100%);
-}
-
-.energy-field::before {
-  content: "";
-  position: absolute;
-  inset: -18%;
-  background:
-    radial-gradient(circle at 18% 68%, rgba(255,255,255,.44), transparent 16rem),
-    radial-gradient(circle at 78% 28%, rgba(255,204,55,.42), transparent 18rem),
-    conic-gradient(from calc(var(--scroll) * 1turn), rgba(255,255,255,.16), rgba(255,111,16,.2), rgba(255,214,80,.18), rgba(255,255,255,.16));
-  mix-blend-mode: screen;
-  opacity: calc(.45 + var(--energy) * .3);
-  transform: translate3d(calc((var(--mx) - .5) * 28px), calc((var(--my) - .5) * 22px + var(--scroll) * -46px), 0) rotate(calc(var(--scroll) * 18deg));
-  animation: gradientAlive 12s ease-in-out infinite alternate;
-}
-
-.field-texture {
-  position: absolute;
-  inset: -14vh -14vw;
-  background-image: url("./brandforge/molten-fire.png");
-  background-repeat: no-repeat;
-  background-position: center calc(6% + var(--scroll) * -18px);
-  background-size: min(1280px, 165vw);
-  opacity: .52;
-  mix-blend-mode: multiply;
-  filter: saturate(1.75) contrast(1.18) blur(1px);
-  transform: translate3d(calc((var(--mx) - .5) * -42px), calc((var(--my) - .5) * -34px + var(--scroll) * -34px), 0) scale(calc(1.06 + var(--energy) * .035));
-  animation: textureBreath 12s ease-in-out infinite alternate;
-}
-
-.heat-layer {
-  position: absolute;
-  inset: -8vh -8vw;
-  background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,.13) 0 1px, transparent 1px 15px),
-    radial-gradient(circle at 50% 45%, rgba(255,255,255,.32), transparent 28rem);
-  opacity: calc(.64 + var(--energy) * .24);
-  filter: url("#heat-haze");
-  transform: translate3d(calc((var(--mx) - .5) * 30px), calc((var(--my) - .5) * 24px + var(--scroll) * 28px), 0);
-  animation: heatMove 3.8s linear infinite;
 }
 
 .energy-core {
@@ -343,8 +296,8 @@ button, input, select, textarea { max-width: 100%; }
   box-shadow: 0 18px 48px rgba(103,29,0,.28), 0 0 34px rgba(255,124,17,.45), inset 0 1px 0 rgba(255,255,255,.82);
 }
 
-.orbit-reel { left: 7.2rem; top: .8rem; }
-.orbit-campaign { left: 6.1rem; top: 5rem; }
+.orbit-brand { left: 7.2rem; top: .8rem; }
+.orbit-reel { left: 6.1rem; top: 5rem; }
 .orbit-order { left: 2.1rem; top: 9.2rem; }
 
 .scrolly-stage {
@@ -1225,8 +1178,8 @@ legend {
     width: 3rem;
   }
 
-  .orbit-reel { left: 4.9rem; top: .4rem; }
-  .orbit-campaign { left: 4.4rem; top: 3.8rem; }
+  .orbit-brand { left: 4.9rem; top: .4rem; }
+  .orbit-reel { left: 4.4rem; top: 3.8rem; }
   .orbit-order { left: 1.1rem; top: 7.2rem; }
 
   .scrolly-stage {
@@ -1355,8 +1308,6 @@ legend {
   }
 }
 
-body.lite-motion .energy-field::before,
-body.lite-motion .field-texture,
 body.lite-motion .core-texture,
 body.lite-motion .central-core::before,
 body.lite-motion .central-core::after,
@@ -1366,7 +1317,6 @@ body.lite-motion .molten-button::before {
   animation: none !important;
 }
 
-body.lite-motion .heat-layer,
 body.lite-motion .ambient-sparks,
 body.lite-motion .spark-bursts,
 body.lite-motion .core-a,
@@ -1377,30 +1327,19 @@ body.lite-motion .gravity-line {
   display: none;
 }
 
-body.lite-motion .energy-field::before,
-body.lite-motion .field-texture,
 body.lite-motion .central-core,
 body.lite-motion .core-texture {
   transform: none !important;
 }
 
-body.lite-motion .heat-layer,
-body.lite-motion .field-texture,
 body.lite-motion .energy-core,
 body.lite-motion .liquid-panel::before,
 body.lite-motion .radial-logo img {
   filter: none !important;
 }
 
-body.lite-motion .energy-field::before,
-body.lite-motion .field-texture,
 body.lite-motion .core-texture {
   mix-blend-mode: normal;
-}
-
-body.lite-motion .field-texture {
-  opacity: .22;
-  background-size: min(980px, 150vw);
 }
 
 body.lite-motion .central-core {
@@ -1428,22 +1367,6 @@ body.lite-motion.burn-active .liquid-panel::after {
     scroll-behavior: auto !important;
     transition-duration: .001ms !important;
   }
-}
-
-@keyframes textureBreath {
-  from { filter: saturate(1.65) contrast(1.12) blur(1px); }
-  to { filter: saturate(1.95) contrast(1.24) blur(2px); }
-}
-
-@keyframes gradientAlive {
-  from { filter: hue-rotate(0deg) saturate(1); transform: translate3d(calc((var(--mx) - .5) * 20px), calc((var(--my) - .5) * 16px), 0) rotate(0deg); }
-  to { filter: hue-rotate(-10deg) saturate(1.18); transform: translate3d(calc((var(--mx) - .5) * 36px), calc((var(--my) - .5) * 28px - 30px), 0) rotate(10deg); }
-}
-
-@keyframes heatMove {
-  0% { transform: translateX(-1%) skewX(0deg); }
-  50% { transform: translateX(1%) skewX(-1.2deg); }
-  100% { transform: translateX(-1%) skewX(0deg); }
 }
 
 @keyframes coreTexture {

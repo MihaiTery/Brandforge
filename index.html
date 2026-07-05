@@ -21,18 +21,7 @@
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <svg class="defs" aria-hidden="true" focusable="false">
-      <filter id="heat-haze">
-        <feTurbulence type="fractalNoise" baseFrequency="0.009 0.052" numOctaves="2" seed="5">
-          <animate attributeName="baseFrequency" dur="5s" values="0.009 0.052;0.018 0.032;0.009 0.052" repeatCount="indefinite"></animate>
-        </feTurbulence>
-        <feDisplacementMap in="SourceGraphic" scale="16"></feDisplacementMap>
-      </filter>
-    </svg>
-
     <div class="energy-field" aria-hidden="true">
-      <div class="field-texture"></div>
-      <div class="heat-layer"></div>
       <div class="central-core energy-core" data-core="0">
         <div class="core-texture"></div>
       </div>
@@ -51,14 +40,14 @@
     </div>
 
     <aside class="radial-nav" aria-label="Navigatie BrandForge">
-      <a class="radial-logo" href="#top" aria-label="BrandForge acasa">
+      <a class="radial-logo" href="#hero" aria-label="BrandForge" data-panel-link="0">
         <img src="./brandforge/logo.svg" alt="BrandForge">
       </a>
       <div class="orbit-ring ring-one"></div>
       <div class="orbit-ring ring-two"></div>
+      <a class="orbit-link orbit-brand" href="#hero" data-panel-link="0"><span>BrandForge</span></a>
       <a class="orbit-link orbit-reel" href="./ReelForge/"><span>ReelForge</span></a>
-      <a class="orbit-link orbit-campaign" href="#panel-9" data-panel-link="8"><span>Campanii</span></a>
-      <a class="orbit-link orbit-order" href="#contact" data-panel-link="9"><span>Contact</span></a>
+      <a class="orbit-link orbit-order" href="#contact" data-panel-link="8"><span>Contact</span></a>
     </aside>
 
     <main id="top">
