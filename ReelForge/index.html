@@ -1,109 +1,120 @@
 <!doctype html>
-<html lang="ro">
+<html lang="ro" class="no-js">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Genereaza reel AI de 1 euro | ReelForge</title>
-    <meta name="description" content="Comanda un reel AI vertical pentru TikTok, Instagram Reels, YouTube Shorts si Facebook. Incarci materialele, alegi ce promovezi si primesti reel-ul pe email.">
-    <meta name="theme-color" content="#ffb72e">
-    <meta property="og:title" content="ReelForge - reel AI de 1 euro">
-    <meta property="og:description" content="Completeaza detaliile, incarca imaginea si CTA-ul vocal, iar ReelForge pregateste un reel AI vertical livrat pe email.">
+    <title>Forjează un reel AI cu 1€ | ReelForge</title>
+    <meta name="description" content="Completează detaliile, forja BrandForge bate un reel AI vertical pentru TikTok, Instagram Reels, YouTube Shorts și Facebook — livrat pe email, cu 1€.">
+    <meta name="theme-color" content="#150a05">
+    <meta property="og:title" content="ReelForge — un reel AI forjat cu 1€">
+    <meta property="og:description" content="Completează detaliile, încarcă imaginea și CTA-ul vocal, iar ReelForge îți livrează pe email un reel AI vertical gata de postat.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mihaitery.github.io/Brandforge/ReelForge/">
-    <meta property="og:image" content="https://mihaitery.github.io/Brandforge/brandforge/molten-fire.png">
+    <meta property="og:image" content="https://mihaitery.github.io/Brandforge/brandforge/social-share.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ReelForge - reel AI de 1 euro">
-    <meta name="twitter:description" content="Completeaza detaliile, incarca imaginea si CTA-ul vocal, iar ReelForge pregateste un reel AI vertical livrat pe email.">
-    <meta name="twitter:image" content="https://mihaitery.github.io/Brandforge/brandforge/molten-fire.png">
+    <meta name="twitter:title" content="ReelForge — un reel AI forjat cu 1€">
+    <meta name="twitter:description" content="Completează detaliile, încarcă imaginea și CTA-ul vocal, iar ReelForge îți livrează pe email un reel AI vertical gata de postat.">
+    <meta name="twitter:image" content="https://mihaitery.github.io/Brandforge/brandforge/social-share.png">
     <link rel="canonical" href="https://mihaitery.github.io/Brandforge/ReelForge/">
     <link rel="icon" href="../brandforge/favicon.svg" type="image/svg+xml">
-    <link rel="preload" href="../brandforge/molten-fire.png" as="image">
     <link rel="stylesheet" href="../styles.css">
+    <script>document.documentElement.classList.remove("no-js");</script>
   </head>
   <body class="order-page">
-    <svg class="defs" aria-hidden="true" focusable="false">
-      <filter id="heat-haze">
-        <feTurbulence type="fractalNoise" baseFrequency="0.009 0.052" numOctaves="2" seed="5">
-          <animate attributeName="baseFrequency" dur="5s" values="0.009 0.052;0.018 0.032;0.009 0.052" repeatCount="indefinite"></animate>
-        </feTurbulence>
-        <feDisplacementMap in="SourceGraphic" scale="16"></feDisplacementMap>
-      </filter>
-    </svg>
+    <a class="skip-link" href="#formular">Sari la formular</a>
 
-    <div class="energy-field" aria-hidden="true">
-      <div class="field-texture"></div>
-      <div class="heat-layer"></div>
-      <div class="central-core energy-core" data-core="0">
-        <div class="core-texture"></div>
+    <!-- Fundal fix: forja în vulcan (WebGL pe desktop, CSS în rest) -->
+    <div class="forge-backdrop" data-forge-scene aria-hidden="true">
+      <div class="scene-css">
+        <div class="embers">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
       </div>
-      <div class="energy-core core-a" data-core="1"></div>
-      <div class="energy-core core-b" data-core="2"></div>
-      <div class="energy-core core-c" data-core="3"></div>
-      <div class="energy-core core-d" data-core="4"></div>
-      <div class="gravity-line line-a"></div>
-      <div class="gravity-line line-b"></div>
-      <div class="lava-plane"></div>
-      <div class="ambient-sparks">
-        <span></span><span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
-      <div class="spark-bursts" id="sparkBursts"></div>
+      <div class="scene-shade"></div>
     </div>
 
-    <aside class="radial-nav" aria-label="Navigatie BrandForge">
-      <a class="radial-logo" href="../index.html#hero" aria-label="BrandForge">
+    <aside class="radial-nav" aria-label="Navigație BrandForge">
+      <a class="radial-logo" href="../index.html#start" aria-label="BrandForge">
         <img src="../brandforge/logo.svg" alt="BrandForge">
       </a>
       <div class="orbit-ring ring-one"></div>
       <div class="orbit-ring ring-two"></div>
-      <a class="orbit-link orbit-brand" href="../index.html#hero"><span>BrandForge</span></a>
+      <a class="orbit-link orbit-brand" href="../index.html#start"><span>BrandForge</span></a>
       <a class="orbit-link orbit-reel" href="./index.html"><span>ReelForge</span></a>
-      <a class="orbit-link orbit-order" href="../index.html#contact"><span>Contact</span></a>
+      <a class="orbit-link orbit-contact" href="../index.html#contact"><span>Contact</span></a>
     </aside>
 
     <main class="order-shell">
-      <section class="order-intro liquid-panel is-active">
-        <p class="eyebrow">ReelForge</p>
-        <h1>Genereaza un reel AI cu doar 1 euro</h1>
-        <p>Completeaza cateva informatii, incarca materialele necesare si primesti reel-ul vertical pe email. ReelForge este gandit pentru TikTok, Instagram Reels, YouTube Shorts si Facebook.</p>
+      <section class="order-intro glass-panel">
+        <p class="kicker">ReelForge</p>
+        <h1>Forjează un reel AI cu doar 1€</h1>
+        <p class="lede">Torni câteva detalii, încarci materialele, iar forja bate un reel vertical gata de postat — livrat pe email. Gândit pentru TikTok, Instagram Reels, YouTube Shorts și Facebook.</p>
         <div class="order-highlights">
-          <div><strong>Un singur reel</strong><span>Ideal pentru testarea unei idei, a unui produs sau a unui mesaj.</span></div>
-          <div><strong>Format 9:16</strong><span>Creat pentru social media si consum rapid pe mobil.</span></div>
-          <div><strong>Fara cont</strong><span>Trimiti detaliile si materialele direct din formular.</span></div>
+          <div class="glass-chip"><strong>Un singur reel</strong><span>Ideal pentru testarea unei idei, a unui produs sau a unui mesaj.</span></div>
+          <div class="glass-chip"><strong>Format 9:16</strong><span>Creat pentru social media și consum rapid pe mobil.</span></div>
+          <div class="glass-chip"><strong>Fără cont</strong><span>Trimiți detaliile și materialele direct din formular.</span></div>
         </div>
       </section>
 
       <section class="order-layout">
-        <article class="liquid-panel form-panel order-form-panel" id="formular">
+        <article class="glass-panel form-panel order-form-panel" id="formular">
           <h2>Reel 1€</h2>
-          <p>Completeaza cateva informatii, incarca materialele necesare si primesti reel-ul pe email.</p>
+          <p>Completează câteva informații, încarcă materialele necesare și primești reel-ul pe email.</p>
           <form class="forge-form" novalidate>
             <fieldset class="type-tiles">
-              <legend>Ce vrei sa promovezi?</legend>
+              <legend>Ce vrei să promovezi?</legend>
               <label><input type="radio" name="type" value="brand" checked><span>Brand</span></label>
               <label><input type="radio" name="type" value="serviciu"><span>Serviciu</span></label>
               <label><input type="radio" name="type" value="produs"><span>Produs</span></label>
               <label><input type="radio" name="type" value="creator"><span>Creator</span></label>
             </fieldset>
             <div id="dynamicFields" class="dynamic-fields" aria-live="polite"></div>
-            <button class="btn molten-button primary form-submit" type="submit">Genereaza Reel 1€</button>
+            <!-- TODO: integrare plata (Stripe) + pipeline generare AI. Butonul e doar UI pana atunci. -->
+            <button class="btn btn-molten form-submit" type="submit">Forjează reel-ul — 1€</button>
+            <p class="form-state" role="status" aria-live="polite"></p>
           </form>
+          <p class="form-upsell">Vrei ceva 100% pe brandul tău, cu direcție creativă și conținut recurent? <a href="../index.html#servicii">Vezi serviciile custom BrandForge →</a></p>
+
+          <section class="pages-local-preview" data-pages-preview hidden aria-label="Preview local Pages of Alexandria">
+            <div class="preview-copy">
+              <strong>Pages local test mode</strong>
+              <span>Export local pentru verificarea promptului. Nu se proceseaza plata si nu se consuma credite API.</span>
+            </div>
+            <div class="pages-preview-grid">
+              <article>
+                <h3>Project Status</h3>
+                <pre data-project-status></pre>
+              </article>
+              <article>
+                <h3>Prompt Preview</h3>
+                <pre data-prompt-preview></pre>
+              </article>
+              <article>
+                <h3>JSONL Preview</h3>
+                <pre data-jsonl-preview></pre>
+              </article>
+            </div>
+          </section>
         </article>
 
-        <aside class="order-notes liquid-panel is-active">
-          <h2>Ce pregatesti</h2>
+        <aside class="order-notes glass-panel">
+          <h2>Ce pregătești</h2>
           <div class="flow-console">
-            <div><strong>Imagine reprezentativa</strong><span>Poate fi personaj, produs, logo vizual sau element relevant pentru brand.</span></div>
-            <div><strong>CTA vocal</strong><span>Un mesaj scurt de 3-5 secunde cu apelul la actiune.</span></div>
-            <div><strong>Titlu si context</strong><span>Spune clar ce promovezi si ce vrei sa inteleaga publicul.</span></div>
+            <div class="glass-chip"><strong>Imagine reprezentativă</strong><span>Poate fi personaj, produs, logo vizual sau element relevant pentru brand.</span></div>
+            <div class="glass-chip"><strong>CTA vocal</strong><span>Un mesaj scurt de 3-5 secunde cu apelul la acțiune.</span></div>
+            <div class="glass-chip"><strong>Titlu și context</strong><span>Spune clar ce promovezi și ce vrei să înțeleagă publicul.</span></div>
           </div>
           <div class="cta-row">
-            <a class="btn molten-button secondary" href="../index.html">Inapoi la BrandForge</a>
+            <a class="btn btn-glass" href="../index.html">Înapoi la BrandForge</a>
           </div>
         </aside>
       </section>
     </main>
 
     <script src="../script.js"></script>
+    <script src="../forge-scene.js" defer></script>
   </body>
 </html>
