@@ -1,49 +1,3 @@
-const fieldSets = {
-  brand: [
-    ["Nume firma / brand", "text", true],
-    ["Descriere Business", "text", true],
-    ["Titlu reel", "text", true],
-    ["Email pentru livrare", "email", true],
-    ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
-    ["Logo optional", "file:logo", false],
-    ["CTA text", "text", true, "full-span"],
-    ["Incarca CTA vocal de 3-5 secunde", "file:audio", true, "full-span"]
-  ],
-  serviciu: [
-    ["Nume firma", "text", true],
-    ["Titlu reel", "text", true],
-    ["Explicatie scurta serviciu", "textarea", true, "full-span"],
-    ["Email pentru livrare", "email", true, "full-span"],
-    ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
-    ["Logo optional", "file:logo", false],
-    ["CTA text", "text", true, "full-span"],
-    ["Incarca CTA vocal de 3-5 secunde", "file:audio", true, "full-span"]
-  ],
-  produs: [
-    ["Nume firma", "text", true],
-    ["Nume produs", "text", true],
-    ["Titlu reel", "text", true],
-    ["Email pentru livrare", "email", true],
-    ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
-    ["Incarca poza produs", "file:image", true],
-    ["Logo optional", "file:logo", false],
-    ["CTA text", "text", true],
-    ["Incarca CTA vocal de 3-5 secunde", "file:audio", true]
-  ],
-  creator: [
-    ["Nume creator / nume cont", "text", true],
-    ["Stil vizual", "select", true],
-    ["Titlu reel", "text", true],
-    ["Email pentru livrare", "email", true],
-    ["Incarca imagine personaj / imagine reprezentativa", "file:image", true],
-    ["CTA text", "text", true],
-    ["Incarca CTA vocal de 3-5 secunde", "file:audio", true]
-  ]
-};
-
-const creatorStyles = ["cinematic realist", "educativ", "abstract", "luxury", "comic", "documentar"];
-const dynamicFields = document.querySelector("#dynamicFields");
-const form = document.querySelector(".forge-form");
 const panels = document.querySelectorAll("[data-panel]");
 const triggers = document.querySelectorAll("[data-trigger]");
 const prevPanelButton = document.querySelector(".prev-panel");
@@ -65,278 +19,6 @@ const maxBurnLevel = 6;
 const isLiteMotion = liteMotionQuery.matches;
 
 if (isLiteMotion) document.body.classList.add("lite-motion");
-
-function fieldId(label) {
-  return label.toLowerCase().replaceAll(" ", "-").replace(/[^a-z0-9-]/g, "");
-}
-
-function uploadHint(label) {
-  if (label.includes("CTA")) return "Accepta: .mp3, .wav, .m4a";
-  if (label.includes("Logo")) return "Accepta: .jpg, .jpeg, .png, .svg, .webp";
-  return "Accepta: .jpg, .jpeg, .png, .webp";
-}
-
-function uploadTitle(label) {
-  if (label.includes("CTA")) return "Incarca CTA vocal";
-  if (label.includes("Logo")) return "Incarca logo";
-  if (label.includes("poza produs")) return "Incarca poza produs";
-  return "Incarca imagine";
-}
-
-function fileAccept(inputType) {
-  if (inputType === "file:audio") return ".mp3,.wav,.m4a,audio/mpeg,audio/wav,audio/x-m4a,audio/mp4";
-  if (inputType === "file:logo") return ".jpg,.jpeg,.png,.svg,.webp,image/jpeg,image/png,image/svg+xml,image/webp";
-  return ".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp";
-}
-function createField(label, inputType, required, layoutClass = "") {
-  const id = fieldId(label);
-  const wrapper = document.createElement("div");
-  const isFile = inputType.startsWith("file");
-  wrapper.className = isFile ? "field drop-field" : "field";
-  if (layoutClass) wrapper.classList.add(layoutClass);
-
-  const labelEl = document.createElement("label");
-  labelEl.htmlFor = id;
-  labelEl.textContent = `${label}${required ? " *" : ""}`;
-
-  if (isFile) {
-    const input = document.createElement("input");
-    input.id = id;
-    input.name = id;
-    input.type = "file";
-    input.accept = fileAccept(inputType);
-    input.required = required;
-
-    const visual = document.createElement("label");
-    visual.className = "drop-zone";
-    visual.htmlFor = id;
-    visual.innerHTML = `
-      <span class="drop-icon">+</span>
-      <span><strong>${uploadTitle(label)}</strong><small>${uploadHint(label)}</small></span>
-    `;
-
-    input.addEventListener("change", () => {
-      wrapper.classList.toggle("selected", input.files.length > 0);
-      visual.querySelector("strong").textContent = input.files[0]?.name || uploadTitle(label);
-    });
-
-    wrapper.append(labelEl, input, visual);
-    return wrapper;
-  }
-
-  let input;
-  if (inputType === "select") {
-    input = document.createElement("select");
-    creatorStyles.forEach((style) => {
-      const option = document.createElement("option");
-      option.value = style;
-      option.textContent = style;
-      input.append(option);
-    });
-  } else if (inputType === "textarea") {
-    input = document.createElement("textarea");
-    input.rows = 3;
-    input.setAttribute("aria-label", label);
-  } else {
-    input = document.createElement("input");
-    input.type = inputType;
-    input.setAttribute("aria-label", label);
-  }
-
-  input.id = id;
-  input.name = id;
-  input.required = required;
-  wrapper.append(labelEl, input);
-  return wrapper;
-}
-
-function renderFields(type, animated = false) {
-  const fields = fieldSets[type].map((field) => createField(...field));
-  if (!animated) {
-    dynamicFields.replaceChildren(...fields);
-    return;
-  }
-
-  dynamicFields.classList.add("switching");
-  window.setTimeout(() => {
-    dynamicFields.replaceChildren(...fields);
-    dynamicFields.classList.remove("switching");
-  }, 180);
-}
-
-/* Local Pages of Alexandria test integration.
-   Keeps the restored ReelForge form intact and only adapts its current values
-   into the local Pages API payload. No payment and no image API call happen here. */
-const PAGES_API_BASE = "http://127.0.0.1:8765";
-const pagesPreview = document.querySelector("[data-pages-preview]");
-const projectStatusPreview = document.querySelector("[data-project-status]");
-const promptPreview = document.querySelector("[data-prompt-preview]");
-const jsonlPreview = document.querySelector("[data-jsonl-preview]");
-
-const pagesFieldIds = {
-  brand: {
-    company_name: "nume-firma--brand",
-    business_niche_explanation: "descriere-business",
-    reel_title: "titlu-reel",
-    character: "incarca-imagine-personaj--imagine-reprezentativa",
-    logo: "logo-optional",
-    cta: "cta-text",
-    cta_audio: "incarca-cta-vocal-de-3-5-secunde"
-  },
-  serviciu: {
-    company_name: "nume-firma",
-    short_service_explanation: "explicatie-scurta-serviciu",
-    reel_title: "titlu-reel",
-    character: "incarca-imagine-personaj--imagine-reprezentativa",
-    logo: "logo-optional",
-    cta: "cta-text",
-    cta_audio: "incarca-cta-vocal-de-3-5-secunde"
-  },
-  produs: {
-    company_name: "nume-firma",
-    product_name: "nume-produs",
-    reel_title: "titlu-reel",
-    character: "incarca-imagine-personaj--imagine-reprezentativa",
-    product: "incarca-poza-produs",
-    logo: "logo-optional",
-    cta: "cta-text",
-    cta_audio: "incarca-cta-vocal-de-3-5-secunde"
-  },
-  creator: {
-    creator_name: "nume-creator--nume-cont",
-    style_notes: "stil-vizual",
-    reel_title: "titlu-reel",
-    character: "incarca-imagine-personaj--imagine-reprezentativa",
-    cta: "cta-text",
-    cta_audio: "incarca-cta-vocal-de-3-5-secunde"
-  }
-};
-
-function currentReelType() {
-  return form?.querySelector("input[name='type']:checked")?.value || "brand";
-}
-
-function pagesReelType(type) {
-  return {
-    brand: "brand",
-    serviciu: "service",
-    produs: "product",
-    creator: "creator"
-  }[type] || "brand";
-}
-
-function currentField(id) {
-  return id ? document.getElementById(id) : null;
-}
-
-function currentValue(type, key) {
-  return currentField(pagesFieldIds[type]?.[key])?.value?.trim() || "";
-}
-
-function currentFile(type, key) {
-  return currentField(pagesFieldIds[type]?.[key])?.files?.[0] || null;
-}
-
-function makePagesOrderId(type) {
-  const base = currentValue(type, "company_name") || currentValue(type, "creator_name") || "brandforge";
-  const slug = base
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 36) || "brandforge";
-  return `${pagesReelType(type)}-${slug}-${Date.now().toString(36)}`;
-}
-
-function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => resolve(reader.result));
-    reader.addEventListener("error", () => reject(reader.error || new Error("Fisierul nu a putut fi citit.")));
-    reader.readAsDataURL(file);
-  });
-}
-
-function assertRasterImage(file, label) {
-  if (!file) throw new Error(`${label} este obligatorie pentru exportul local Pages.`);
-  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
-    throw new Error(`${label} trebuie sa fie PNG, JPG sau WEBP pentru testul local Pages.`);
-  }
-}
-
-async function buildPagesPayloadFromForm() {
-  const type = currentReelType();
-  const reelType = pagesReelType(type);
-  const ctaAudio = currentFile(type, "cta_audio");
-  const ctaText = currentValue(type, "cta");
-  const character = currentFile(type, "character");
-  const logo = currentFile(type, "logo");
-  const assets = {};
-
-  assertRasterImage(character, "Imaginea personajului");
-  assets.character = await fileToDataUrl(character);
-  if (logo) {
-    assertRasterImage(logo, "Logo-ul");
-    assets.logo = await fileToDataUrl(logo);
-  }
-  if (reelType === "product") {
-    const product = currentFile(type, "product");
-    assertRasterImage(product, "Poza produsului");
-    assets.product = await fileToDataUrl(product);
-  }
-
-  const payload = {
-    order_id: makePagesOrderId(type),
-    reel_type: reelType,
-    reel_title: currentValue(type, "reel_title"),
-    cta: ctaText,
-    assets
-  };
-  if (ctaAudio) {
-    payload.cta_audio_filename = ctaAudio.name;
-  }
-
-  if (reelType === "creator") {
-    payload.creator_name = currentValue(type, "creator_name");
-    payload.style_notes = currentValue(type, "style_notes");
-  } else {
-    payload.company_name = currentValue(type, "company_name");
-  }
-  if (reelType === "brand") {
-    payload.business_niche_explanation = currentValue(type, "business_niche_explanation");
-  }
-  if (reelType === "service") {
-    payload.short_service_explanation = currentValue(type, "short_service_explanation");
-  }
-  if (reelType === "product") {
-    payload.product_name = currentValue(type, "product_name");
-  }
-  return payload;
-}
-
-async function pagesRequest(path, options = {}) {
-  const response = await fetch(`${PAGES_API_BASE}${path}`, options);
-  const contentType = response.headers.get("content-type") || "";
-  const body = contentType.includes("application/json") ? await response.json() : await response.text();
-  if (!response.ok) {
-    throw new Error((body && body.error) || body || `Pages API error ${response.status}`);
-  }
-  return body;
-}
-
-function showPagesPreview(status, prompt, jsonl) {
-  if (!pagesPreview) return;
-  pagesPreview.hidden = false;
-  if (projectStatusPreview) projectStatusPreview.textContent = JSON.stringify(status, null, 2);
-  if (promptPreview) promptPreview.textContent = prompt;
-  if (jsonlPreview) jsonlPreview.textContent = jsonl;
-}
-
-function setLocalSubmitState(isBusy) {
-  const button = form?.querySelector(".form-submit");
-  if (!button) return;
-  button.disabled = isBusy;
-  button.textContent = isBusy ? "Forjăm local..." : "Forjează reel-ul — 1€";
-}
 
 function setPanel(index) {
   activePanel = Number(index);
@@ -454,53 +136,6 @@ document.querySelectorAll("[data-panel-link]").forEach((link) => {
   });
 });
 
-if (form && dynamicFields) {
-  document.querySelectorAll("input[name='type']").forEach((radio) => {
-    radio.addEventListener("change", (event) => {
-      renderFields(event.target.value, true);
-      if (pagesPreview) pagesPreview.hidden = true;
-      const state = form.querySelector(".form-state");
-      if (state) state.textContent = "";
-    });
-  });
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const state = form.querySelector(".form-state");
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      if (state) state.textContent = "Completeaza campurile marcate cu * pentru tipul de reel ales.";
-      return;
-    }
-
-    try {
-      setLocalSubmitState(true);
-      if (state) state.textContent = "Mod local: trimitem brief-ul catre Pages of Alexandria. Nu se proceseaza plata si nu se consuma credite API.";
-      if (pagesPreview) pagesPreview.hidden = true;
-
-      const payload = await buildPagesPayloadFromForm();
-      const created = await pagesRequest("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const orderId = created.order_id || payload.order_id;
-      const [status, prompt, jsonl] = await Promise.all([
-        pagesRequest(`/api/projects/${encodeURIComponent(orderId)}`),
-        pagesRequest(`/api/projects/${encodeURIComponent(orderId)}/prompt`),
-        pagesRequest(`/api/projects/${encodeURIComponent(orderId)}/jsonl`)
-      ]);
-
-      showPagesPreview(status, prompt, jsonl);
-      if (state) state.textContent = `Export local generat pentru ${orderId}. Promptul si JSONL-ul sunt afisate mai jos.`;
-    } catch (error) {
-      if (state) state.textContent = `Eroare local Pages: ${error.message}`;
-    } finally {
-      setLocalSubmitState(false);
-    }
-  });
-}
-
 prevPanelButton?.addEventListener("click", () => {
   goToPanel(activePanel - 1);
 });
@@ -509,31 +144,9 @@ nextPanelButton?.addEventListener("click", () => {
   goToPanel(activePanel + 1);
 });
 
-const metricObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (!entry.isIntersecting) return;
-    const target = entry.target;
-    const end = Number(target.dataset.count);
-    const start = performance.now();
-
-    function tick(now) {
-      const progress = Math.min((now - start) / 1200, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      target.textContent = Math.floor(end * eased).toLocaleString("ro-RO");
-      if (progress < 1) requestAnimationFrame(tick);
-    }
-
-    requestAnimationFrame(tick);
-    metricObserver.unobserve(target);
-  });
-}, { threshold: 0.45 });
-
-document.querySelectorAll("[data-count]").forEach((metric) => metricObserver.observe(metric));
-
 if (!isLiteMotion) window.addEventListener("pointermove", handlePointerMove, { passive: true });
 window.addEventListener("scroll", handleScroll, { passive: true });
 
-if (form && dynamicFields) renderFields("brand");
 setPanel(0);
 handleScroll();
 scheduleVisualState();
@@ -543,3 +156,106 @@ if (!isLiteMotion) {
   window.setInterval(updateDwellBurn, 3000);
 }
 
+/* === WhatsApp — sursa centralizata a numarului si a mesajelor precompletate ===
+   Un singur loc de adevar pentru numar si texte, ca sa nu se dubleze prin
+   fisier. Fiecare link WhatsApp din pagina are deja un href static valid in
+   HTML (pentru cazul in care JavaScript e dezactivat); aici doar il aducem
+   la zi cu mesajul precompletat corect, per context.
+   ============================================================================ */
+const WHATSAPP_NUMBER = "40722882473";
+const WHATSAPP_DEFAULT_MESSAGE = "Bună! Am văzut BrandForge și aș dori mai multe informații despre crearea unui reel.";
+const WHATSAPP_REELFORGE_MESSAGE = "Bună! Am văzut BrandForge. Aș dori mai multe informații despre ReelForge și despre comenzile personalizate.";
+
+function buildWhatsAppUrl(message) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+document.querySelectorAll("[data-whatsapp-cta]").forEach((link) => {
+  link.href = buildWhatsAppUrl(WHATSAPP_DEFAULT_MESSAGE);
+});
+
+/* === Modal "ReelForge — în pregătire" =========================================
+   ReelForge nu este contactat in aceasta etapa: nu exista fetch, health-check
+   sau redirect catre Vercel. Fiecare CTA [data-reelforge-cta] deschide direct
+   acest modal static. Injectat o singura data, reutilizat de toate paginile
+   care includ acest script (homepage, 404).
+   ============================================================================ */
+function buildReelForgeModal() {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.id = "reelForgeModal";
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reelForgeModalTitle" aria-describedby="reelForgeModalDesc">
+      <button class="modal-close" type="button" data-modal-close aria-label="Închide fereastra">✕</button>
+      <p class="kicker">ReelForge — în pregătire</p>
+      <h2 id="reelForgeModalTitle">ReelForge este în curs de pregătire</h2>
+      <p id="reelForgeModalDesc">Platforma de creare a reelurilor nu este disponibilă momentan. Lucrăm la conectarea sistemului de generare și randare, astfel încât experiența să fie stabilă și completă.</p>
+      <p class="modal-secondary">Până la lansare, ne poți contacta direct pe WhatsApp pentru exemple, colaborări sau comenzi personalizate.</p>
+      <div class="modal-actions">
+        <a class="btn btn-molten" href="${buildWhatsAppUrl(WHATSAPP_REELFORGE_MESSAGE)}" target="_blank" rel="noopener noreferrer" data-modal-close>Contactează-ne pe WhatsApp</a>
+        <button class="btn btn-glass" type="button" data-modal-close>Am înțeles</button>
+      </div>
+    </div>`;
+  return overlay;
+}
+
+const reelForgeModal = buildReelForgeModal();
+document.body.append(reelForgeModal);
+
+const reelForgeCtas = document.querySelectorAll("[data-reelforge-cta]");
+let reelForgeModalLastFocus = null;
+
+function getReelForgeModalFocusable() {
+  return Array.from(reelForgeModal.querySelectorAll("button, a[href]"));
+}
+
+function openReelForgeModal(trigger) {
+  reelForgeModalLastFocus = trigger instanceof HTMLElement ? trigger : document.activeElement;
+  reelForgeModal.hidden = false;
+  document.addEventListener("keydown", handleReelForgeModalKeydown);
+  reelForgeModal.querySelector(".modal-close")?.focus();
+}
+
+function closeReelForgeModal() {
+  reelForgeModal.hidden = true;
+  document.removeEventListener("keydown", handleReelForgeModalKeydown);
+  if (reelForgeModalLastFocus instanceof HTMLElement) reelForgeModalLastFocus.focus();
+}
+
+function handleReelForgeModalKeydown(event) {
+  if (event.key === "Escape") {
+    closeReelForgeModal();
+    return;
+  }
+  if (event.key !== "Tab") return;
+
+  const focusable = getReelForgeModalFocusable();
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+reelForgeCtas.forEach((cta) => {
+  cta.setAttribute("aria-haspopup", "dialog");
+  cta.addEventListener("click", (event) => {
+    event.preventDefault();
+    openReelForgeModal(event.currentTarget);
+  });
+});
+
+reelForgeModal.addEventListener("click", (event) => {
+  if (event.target === reelForgeModal) closeReelForgeModal();
+});
+
+reelForgeModal.querySelectorAll("[data-modal-close]").forEach((el) => {
+  el.addEventListener("click", closeReelForgeModal);
+});
