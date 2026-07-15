@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ro" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Formular de retragere | BrandForge</title>
+    <meta name="description" content="Formular pregătitor de retragere dintr-o comandă BrandForge / ReelForge. Deschide aplicația ta de e-mail cu mesajul precompletat către bforge478@gmail.com.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#150a05">
+    <meta property="og:title" content="Formular de retragere | BrandForge">
+    <meta property="og:description" content="Formular pregătitor de retragere dintr-o comandă BrandForge / ReelForge.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://brandforge.digital/withdraw.html">
+    <meta property="og:image" content="https://brandforge.digital/brandforge/social-share.png">
+    <link rel="canonical" href="https://brandforge.digital/withdraw.html">
+    <link rel="icon" href="./brandforge/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <script>document.documentElement.classList.remove("no-js");</script>
+  </head>
+  <body class="order-page legal-page">
+    <a class="skip-link" href="#continut">Sari la conținut</a>
+
+    <div class="forge-backdrop" aria-hidden="true"></div>
+
+    <aside class="radial-nav" aria-label="Navigație BrandForge">
+      <a class="radial-logo" href="./" aria-label="BrandForge — homepage">
+        <img src="./brandforge/logo.svg" alt="" width="42" height="42">
+      </a>
+      <div class="orbit-ring ring-one" aria-hidden="true"></div>
+      <div class="orbit-ring ring-two" aria-hidden="true"></div>
+      <a class="orbit-link orbit-brand" href="./"><span>BrandForge</span></a>
+      <a class="orbit-link orbit-reel" href="https://wa.me/40722882473?text=Bun%C4%83!%20Am%20v%C4%83zut%20BrandForge.%20A%C8%99%20dori%20mai%20multe%20informa%C8%9Bii%20despre%20ReelForge%20%C8%99i%20despre%20comenzile%20personalizate." data-reelforge-cta><span>ReelForge</span></a>
+      <a class="orbit-link orbit-contact" href="./#contact"><span>Contact</span></a>
+    </aside>
+
+    <main id="continut" class="legal-shell">
+      <article class="glass-panel legal-panel">
+        <div class="legal-intro">
+          <p class="kicker">Document juridic</p>
+          <h1>Formular de retragere</h1>
+          <p class="lede">Completează datele de mai jos ca să pregătești o cerere de retragere dintr-o comandă BrandForge / ReelForge. Vezi și <a href="./withdrawal-refunds.html">politica de retragere, anulare și rambursări</a>.</p>
+          <div class="legal-meta">
+            <span>Ultima actualizare: <strong>12 iulie 2026</strong></span>
+            <a class="legal-back" href="./">← Înapoi la homepage</a>
+          </div>
+        </div>
+
+        <p class="legal-card legal-card-warning">
+          Site-ul BrandForge este în prezent static, fără un sistem propriu de transmitere a formularelor. Acest formular nu trimite date către serverele BrandForge — la apăsarea butonului, browserul va deschide aplicația ta de e-mail (de exemplu Gmail sau Outlook), cu un mesaj precompletat către <strong>bforge478@gmail.com</strong>, pe care trebuie să îl trimiți tu, din propria aplicație de e-mail.
+          <!-- TODO WITHDRAWAL BACKEND: înainte de lansarea checkout-ului, înlocuiește mailto cu un endpoint care salvează cererea și trimite confirmare automată pe un suport durabil -->
+        </p>
+
+        <form class="legal-form" id="withdrawForm" novalidate>
+          <label for="wd-name">Nume și prenume
+            <input type="text" id="wd-name" name="name" autocomplete="name" required>
+          </label>
+
+          <label for="wd-email">E-mail folosit la comandă
+            <input type="email" id="wd-email" name="email" autocomplete="email" required>
+          </label>
+
+          <label for="wd-order">Numărul comenzii
+            <input type="text" id="wd-order" name="order" required>
+          </label>
+
+          <label for="wd-date">Data comenzii
+            <input type="date" id="wd-date" name="orderDate" required>
+          </label>
+
+          <label for="wd-service">Serviciul comandat
+            <input type="text" id="wd-service" name="service" placeholder="ex. Reel AI — 1€" required>
+          </label>
+
+          <label for="wd-notes">Observații (opțional)
+            <textarea id="wd-notes" name="notes" rows="4"></textarea>
+          </label>
+
+          <p class="legal-note">Declarația care va fi trimisă în numele tău: „Vă informez prin prezenta cu privire la retragerea mea din contractul referitor la serviciul digital indicat mai jos.” Nu este necesar să indici un motiv al retragerii.</p>
+
+          <label class="field-checkbox" for="wd-confirm">
+            <input type="checkbox" id="wd-confirm" name="confirm" required>
+            <span>Confirm că informațiile completate mai sus sunt corecte.</span>
+          </label>
+
+          <div class="cta-row">
+            <button class="btn btn-molten" type="submit">Trimite cererea de retragere</button>
+          </div>
+
+          <p class="legal-note" role="status" aria-live="polite" id="wd-status"></p>
+        </form>
+
+        <p class="legal-note">Poți transmite o declarație neechivocă de retragere și direct la <a href="mailto:bforge478@gmail.com">bforge478@gmail.com</a>.</p>
+
+        <nav class="legal-footer-nav" aria-label="Alte documente juridice">
+          <p>Alte documente juridice:</p>
+          <ul class="contact-links">
+            <li><a href="./terms.html">Termeni și condiții</a></li>
+            <li><a href="./privacy.html">Confidențialitate</a></li>
+            <li><a href="./cookies.html">Cookies</a></li>
+            <li><a href="./withdrawal-refunds.html">Retragere și rambursări</a></li>
+            <li><a href="./ip-license.html">Drepturi de autor și licență</a></li>
+            <li><a href="./ai-content-policy.html">Politica AI și conținut</a></li>
+            <li><a href="./complaints.html">Contact și reclamații</a></li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="site-footer-shell">
+      <p class="legal">
+        BrandForge este operat de NEBO SAFETY SRL<br>
+        CUI 42021319 · J40/17136/2019<br>
+        București, Sector 1<br>
+        <a href="mailto:bforge478@gmail.com">bforge478@gmail.com</a> · <a href="tel:+40722882473">0722 882 473</a><br>
+        Societate plătitoare de TVA
+      </p>
+      <p class="legal">© 2026 NEBO SAFETY SRL. Toate drepturile rezervate.</p>
+    </footer>
+
+    <script src="./script.js" defer></script>
+    <script>
+      (() => {
+        "use strict";
+        const WITHDRAW_EMAIL = "bforge478@gmail.com";
+        const form = document.querySelector("#withdrawForm");
+        const status = document.querySelector("#wd-status");
+
+        form?.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          if (!form.reportValidity()) return;
+
+          const data = new FormData(form);
+          const orderNumber = String(data.get("order") || "").trim();
+          const lines = [
+            "Vă informez prin prezenta cu privire la retragerea mea din contractul referitor la serviciul digital indicat mai jos.",
+            "",
+            `Nume și prenume: ${data.get("name")}`,
+            `E-mail folosit la comandă: ${data.get("email")}`,
+            `Număr comandă: ${orderNumber}`,
+            `Data comenzii: ${data.get("orderDate")}`,
+            `Serviciul comandat: ${data.get("service")}`,
+            `Observații: ${data.get("notes") || "—"}`,
+          ];
+
+          const subject = `Cerere de retragere – comanda ${orderNumber || "[NUMĂR]"}`;
+          const body = lines.join("\n");
+          const mailtoUrl = `mailto:${WITHDRAW_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+          if (status) {
+            status.textContent = "Se deschide aplicația ta de e-mail, cu mesajul precompletat. Verifică datele și apasă Trimite din propria aplicație de e-mail — cererea nu a fost încă transmisă.";
+          }
+
+          window.location.href = mailtoUrl;
+        });
+      })();
+    </script>
+  </body>
+</html>
