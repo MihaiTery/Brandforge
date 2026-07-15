@@ -1,4 +1,4 @@
-/* BrandForge — fundalul "forjă în vulcan" al poveștii scrollytelling.
+/* BrandForge — fundalul "focul din vulcan" al poveștii scrollytelling.
    WebGL raw, zero dependențe (~6KB). Se încarcă leneș (idle), doar pe
    dispozitive capabile; în rest rămâne activ fallback-ul CSS din styles.css.
    Scena reacționează la scroll (u_scroll) și la timpul petrecut pe pagină
@@ -70,7 +70,7 @@ void main(){
   /* paralaxă subtilă la mișcarea cursorului — fundalul "respiră" cu scena */
   p+=u_pointer*0.035;
 
-  /* puls de foale: forja respiră ritmic, ca și cum cineva pompează aerul */
+  /* puls de foale: focul respiră ritmic, ca și cum cineva pompează aerul */
   float bellows=pow(0.5+0.5*sin(u_t*0.9),3.0);
 
   vec3 ember=vec3(0.94,0.31,0.08);   /* --ember  #f04f14 */
@@ -107,7 +107,7 @@ void main(){
   float smoke=smokeBand*smoothstep(0.38,0.72,smokeN)*0.3*(1.0-lava);
   col=mix(col,vec3(0.045,0.032,0.028),smoke);
 
-  /* lumina forjei — jar pulsatoriu, tot mai intens spre finalul poveștii,
+  /* lumina focului — jar pulsatoriu, tot mai intens spre finalul poveștii,
      cu cat vizitatorul sta mai mult pe pagina, si cu respiratia foalelor */
   float d=distance(uv,vec2(0.5,0.34));
   col+=ember*0.22*exp(-d*d*7.0)*(0.82+0.18*sin(u_t*1.7))*(1.0+0.5*heat+0.35*bellows);

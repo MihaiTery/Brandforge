@@ -54,7 +54,7 @@ function applyBurnLevel(level) {
 }
 
 /* Cu cat vizitatorul petrece mai mult timp pe pagina (indiferent daca e
-   activ sau inactiv), cu atat forja se intensifica: lava urca (in shader,
+   activ sau inactiv), cu atat focul se intensifica: lava urca (in shader,
    vezi u_dwell in forge-scene.js) si panourile capata treptat patina arsa.
    Se opreste la un nivel moderat dupa dwellRampDuration, ca sa ramana
    lizibil oricat de mult sta cineva pe site. */
