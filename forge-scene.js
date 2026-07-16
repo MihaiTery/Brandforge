@@ -188,11 +188,28 @@ void main(){
     const uDwell = gl.getUniformLocation(program, "u_dwell");
     const uPointer = gl.getUniformLocation(program, "u_pointer");
 
-    /* progresul poveștii (0..1), citit în bucla de randare */
+    /* progresul poveștii (0..1), citit în bucla de randare. scrollHeight
+       forteaza un layout sincron daca stilul e invalidat, asa ca il citim
+       doar la incarcare/resize, nu la fiecare scroll. */
+    let scrollMax = 0;
+    let scrollResizeToken = 0;
+
+    function updateScrollMax() {
+      scrollMax = document.documentElement.scrollHeight - window.innerHeight;
+    }
+
+    updateScrollMax();
+    window.addEventListener("resize", () => {
+      if (scrollResizeToken) return;
+      scrollResizeToken = requestAnimationFrame(() => {
+        scrollResizeToken = 0;
+        updateScrollMax();
+      });
+    }, { passive: true });
+
     let scrollProgress = 0;
     window.addEventListener("scroll", () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      scrollProgress = max > 0 ? window.scrollY / max : 0;
+      scrollProgress = scrollMax > 0 ? window.scrollY / scrollMax : 0;
     }, { passive: true });
 
     /* paralaxă lină la cursor: target actualizat pe pointermove, valoarea

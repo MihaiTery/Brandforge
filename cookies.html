@@ -40,7 +40,7 @@
           <h1>Politica de cookies</h1>
           <p class="lede">Această pagină explică ce sunt cookies, ce tehnologii de stocare folosește efectiv brandforge.digital astăzi și cum se va schimba această pagină dacă se adaugă tehnologii noi.</p>
           <div class="legal-meta">
-            <span>Ultima actualizare: <strong>12 iulie 2026</strong></span>
+            <span>Ultima actualizare: <strong>16 iulie 2026</strong></span>
             <a class="legal-back" href="./">← Înapoi la homepage</a>
           </div>
         </div>
@@ -51,6 +51,7 @@
             <li><a href="#ce-sunt">Ce sunt cookies</a></li>
             <li><a href="#categorii">Categorii de cookies</a></li>
             <li><a href="#inventar">Inventarul tehnic real al site-ului</a></li>
+            <li><a href="#banner">Bannerul de cookies</a></li>
             <li><a href="#control">Cum îți controlezi opțiunile</a></li>
           </ol>
         </details>
@@ -74,7 +75,7 @@
 
           <section id="inventar">
             <h2>Inventarul tehnic real al site-ului</h2>
-            <p class="legal-card">La data actualizării acestei pagini, codul sursă al brandforge.digital a fost verificat efectiv și <strong>nu conține</strong> Google Analytics, Meta Pixel, TikTok Pixel, alte scripturi de analiză sau marketing, embeduri YouTube/video terțe, fonturi încărcate de la furnizori externi și nu folosește <code>document.cookie</code>, <code>localStorage</code> sau <code>sessionStorage</code>. Singurele scripturi încărcate sunt fișiere proprii, găzduite pe același domeniu.</p>
+            <p class="legal-card">La data actualizării acestei pagini, codul sursă al brandforge.digital a fost verificat efectiv și <strong>nu conține</strong> Google Analytics, Meta Pixel, TikTok Pixel, alte scripturi de analiză sau marketing, embeduri YouTube/video terțe și nici fonturi încărcate de la furnizori externi. Nu folosim <code>document.cookie</code> sau <code>sessionStorage</code>. Singura tehnologie de stocare folosită efectiv este <code>localStorage</code>, exclusiv pentru a reține alegerea ta din <a href="#banner">bannerul de cookies</a> (categoriile bifate și data alegerii) — nicio dată cu caracter personal, niciun identificator de urmărire. Toate scripturile încărcate sunt fișiere proprii, găzduite pe același domeniu.</p>
             <div class="legal-table-wrap">
               <table class="legal-table">
                 <caption>Tehnologii de stocare / urmărire găsite efectiv în cod, la data auditului</caption>
@@ -87,20 +88,30 @@
                   <tr><td>Meta Pixel</td><td>Nu</td><td>—</td></tr>
                   <tr><td>TikTok Pixel</td><td>Nu</td><td>—</td></tr>
                   <tr><td>YouTube embed / iframe</td><td>Nu</td><td>—</td></tr>
-                  <tr><td>localStorage</td><td>Nu</td><td>—</td></tr>
+                  <tr><td>localStorage</td><td>Da</td><td>Cheia <code>bf-cookie-consent</code> — reține exclusiv alegerea ta din bannerul de cookies (categorii + dată); strict necesară pentru funcționarea bannerului</td></tr>
                   <tr><td>sessionStorage</td><td>Nu</td><td>—</td></tr>
                   <tr><td>Fonturi externe</td><td>Nu</td><td>Se folosește stiva de fonturi de sistem (Inter, dacă e instalat local, apoi fonturi implicite ale sistemului de operare)</td></tr>
                   <tr><td>Scripturi găzduite pe același domeniu</td><td>Da</td><td><code>script.js</code> și <code>forge-scene.js</code> — funcționalitate de interfață, fără colectare de date</td></tr>
                 </tbody>
               </table>
             </div>
-            <p>Pentru că nu există în prezent cookies neesențiale, <strong>nu afișăm un banner de consimțământ</strong> — un banner ar fi, în acest moment, inutil. Dacă în viitor adăugăm analytics, pixeli de marketing sau alte tehnologii neesențiale, această pagină va fi actualizată cu inventarul lor real, iar acele scripturi nu vor fi încărcate înainte de a-ți cere și obține consimțământul printr-un banner cu opțiunile „Acceptă toate”, „Refuză opționale” și „Personalizează”, fără căsuțe pre-bifate și fără a ascunde opțiunea de refuz.
-            <!-- TODO COOKIES: dacă se adaugă analytics/marketing, implementează bannerul de consimțământ înainte de a încărca acele scripturi și actualizează tabelul de mai sus --></p>
+            <p>Deși site-ul nu folosește în prezent analytics sau marketing, afișăm de pe acum un banner de consimțământ. Dacă în viitor adăugăm astfel de tehnologii neesențiale, această pagină va fi actualizată cu inventarul lor real, iar acele scripturi nu vor fi încărcate înainte de a-ți cere și obține consimțământul.</p>
+          </section>
+
+          <section id="banner">
+            <h2>Bannerul de cookies</h2>
+            <p>La prima vizită, un banner îți cere să alegi între:</p>
+            <ul>
+              <li><strong>Acceptă tot</strong> — activează toate categoriile, inclusiv preferințe, analytics și marketing (folosite doar dacă și când vor exista efectiv pe site).</li>
+              <li><strong>Refuză opționale</strong> — păstrează doar cookies-urile strict necesare.</li>
+              <li><strong>Personalizează</strong> — deschide un panou în care activezi sau dezactivezi individual fiecare categorie neesențială, fără căsuțe pre-bifate.</li>
+            </ul>
+            <p>Alegerea ta este reținută local, în browserul tău, prin <code>localStorage</code> (vezi tabelul de mai sus). O poți schimba oricând, fără să fie nevoie să ștergi nimic din browser: butonul „🍪 Cookie-uri”, vizibil permanent în colțul din stânga jos al ecranului, redeschide panoul de preferințe.</p>
           </section>
 
           <section id="control">
             <h2>Cum îți controlezi opțiunile</h2>
-            <p>Poți controla și șterge cookies existente direct din setările browserului tău, indiferent de site. Pentru că brandforge.digital nu setează în prezent cookies neesențiale, nu este necesară o acțiune suplimentară din partea ta pe acest site.</p>
+            <p>Poți controla și șterge cookies existente direct din setările browserului tău, indiferent de site. Pe brandforge.digital, cea mai simplă cale este butonul „🍪 Cookie-uri” din colțul din stânga jos, care redeschide oricând panoul de preferințe descris mai sus. Ștergerea manuală, din browser, a datelor stocate pentru acest site elimină alegerea reținută și va reafișa bannerul la vizita următoare.</p>
           </section>
         </div>
 

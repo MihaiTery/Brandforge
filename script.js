@@ -13,6 +13,8 @@ let rafToken = 0;
 let pointerX = window.innerWidth / 2;
 let pointerY = window.innerHeight / 2;
 let scrollRatio = 0;
+let maxScroll = 1;
+let resizeToken = 0;
 const pageLoadTime = performance.now();
 const dwellRampDuration = 90000;
 const maxBurnLevel = 6;
@@ -114,9 +116,22 @@ function handlePointerMove(event) {
   scheduleVisualState();
 }
 
+/* document.body.scrollHeight forteaza un layout sincron daca stilul e
+   invalidat; il citim doar la incarcare/resize, nu la fiecare scroll. */
+function updateMaxScroll() {
+  maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
+}
+
+function scheduleMaxScrollUpdate() {
+  if (resizeToken) return;
+  resizeToken = window.requestAnimationFrame(() => {
+    resizeToken = 0;
+    updateMaxScroll();
+  });
+}
+
 function handleScroll() {
-  const max = Math.max(1, document.body.scrollHeight - window.innerHeight);
-  scrollRatio = window.scrollY / max;
+  scrollRatio = window.scrollY / maxScroll;
   scheduleVisualState();
 }
 
@@ -146,8 +161,10 @@ nextPanelButton?.addEventListener("click", () => {
 
 if (!isLiteMotion) window.addEventListener("pointermove", handlePointerMove, { passive: true });
 window.addEventListener("scroll", handleScroll, { passive: true });
+window.addEventListener("resize", scheduleMaxScrollUpdate, { passive: true });
 
 setPanel(0);
+updateMaxScroll();
 handleScroll();
 scheduleVisualState();
 
@@ -259,3 +276,190 @@ reelForgeModal.addEventListener("click", (event) => {
 reelForgeModal.querySelectorAll("[data-modal-close]").forEach((el) => {
   el.addEventListener("click", closeReelForgeModal);
 });
+
+/* === Banner de consimtamant cookies ============================================
+   Site-ul nu incarca in prezent analytics sau marketing (vezi cookies.html),
+   dar bannerul cere si retine alegerea din timp. Alegerea e stocata sub cheia
+   COOKIE_CONSENT_KEY in localStorage — singura tehnologie de stocare folosita
+   de site, strict necesara pentru functionarea bannerului insusi.
+   ============================================================================ */
+const COOKIE_CONSENT_KEY = "bf-cookie-consent";
+const COOKIE_CONSENT_VERSION = 1;
+const COOKIE_CATEGORIES = ["preferences", "analytics", "marketing"];
+
+function readCookieConsent() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(COOKIE_CONSENT_KEY));
+    return parsed?.version === COOKIE_CONSENT_VERSION ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCookieConsent(choice) {
+  const record = { version: COOKIE_CONSENT_VERSION, necessary: true, updatedAt: new Date().toISOString() };
+  COOKIE_CATEGORIES.forEach((category) => { record[category] = Boolean(choice[category]); });
+  try {
+    window.localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(record));
+  } catch {
+    /* localStorage indisponibil (mod privat etc.) — bannerul va fi reafisat la urmatoarea vizita */
+  }
+  window.bfCookieConsent = record;
+  document.dispatchEvent(new CustomEvent("bf-cookie-consent-changed", { detail: record }));
+  return record;
+}
+
+const cookieBanner = document.createElement("div");
+cookieBanner.className = "cookie-banner";
+cookieBanner.id = "cookieBanner";
+cookieBanner.setAttribute("role", "region");
+cookieBanner.setAttribute("aria-live", "polite");
+cookieBanner.setAttribute("aria-labelledby", "cookieBannerTitle");
+cookieBanner.hidden = true;
+cookieBanner.innerHTML = `
+  <div class="cookie-banner-card">
+    <p class="cookie-banner-title" id="cookieBannerTitle">Folosim cookies?</p>
+    <p class="cookie-banner-text">brandforge.digital funcționează în prezent fără cookies neesențiale. Alegerea ta de aici e reținută pentru cazul în care vom adăuga vreodată analytics sau marketing — o poți schimba oricând din butonul „🍪 Cookie-uri”. <a href="./cookies.html">Detalii</a>.</p>
+    <div class="cookie-banner-actions">
+      <button type="button" class="btn btn-glass" data-cookie-action="reject">Refuză opționale</button>
+      <button type="button" class="btn btn-glass" data-cookie-action="customize">Personalizează</button>
+      <button type="button" class="btn btn-molten" data-cookie-action="accept">Acceptă tot</button>
+    </div>
+  </div>`;
+
+const cookiePreferencesModal = document.createElement("div");
+cookiePreferencesModal.className = "modal-overlay cookie-modal";
+cookiePreferencesModal.id = "cookiePreferencesModal";
+cookiePreferencesModal.hidden = true;
+cookiePreferencesModal.innerHTML = `
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="cookiePrefsTitle">
+    <button class="modal-close" type="button" data-cookie-prefs-close aria-label="Închide fereastra">✕</button>
+    <p class="kicker">Setări cookie-uri</p>
+    <h2 id="cookiePrefsTitle">Personalizează opțiunile</h2>
+    <p>Activezi sau dezactivezi fiecare categorie. Strict necesarele nu pot fi oprite — rețin doar alegerea ta de aici.</p>
+    <ul class="cookie-categories">
+      <li class="cookie-category">
+        <div><strong>Strict necesare</strong><span>Rețin alegerea ta de consimțământ. Mereu active.</span></div>
+        <input type="checkbox" checked disabled aria-label="Strict necesare — mereu active">
+      </li>
+      <li class="cookie-category">
+        <div><strong>Preferințe</strong><span>Opțiuni de afișare sau limbă, dacă vor exista.</span></div>
+        <input type="checkbox" data-cookie-category="preferences" aria-label="Preferințe">
+      </li>
+      <li class="cookie-category">
+        <div><strong>Analytics</strong><span>Statistici de trafic, dacă vor fi adăugate.</span></div>
+        <input type="checkbox" data-cookie-category="analytics" aria-label="Analytics">
+      </li>
+      <li class="cookie-category">
+        <div><strong>Marketing</strong><span>Publicitate direcționată, dacă va fi adăugată.</span></div>
+        <input type="checkbox" data-cookie-category="marketing" aria-label="Marketing">
+      </li>
+    </ul>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-glass" data-cookie-action="reject">Refuză opționale</button>
+      <button type="button" class="btn btn-molten" data-cookie-action="save">Salvează preferințele</button>
+    </div>
+  </div>`;
+
+const cookieSettingsButton = document.createElement("button");
+cookieSettingsButton.type = "button";
+cookieSettingsButton.className = "cookie-settings-fab";
+cookieSettingsButton.setAttribute("aria-haspopup", "dialog");
+cookieSettingsButton.setAttribute("aria-label", "Setări cookie-uri");
+cookieSettingsButton.hidden = true;
+cookieSettingsButton.textContent = "🍪 Cookie-uri";
+
+document.body.append(cookieBanner, cookiePreferencesModal, cookieSettingsButton);
+
+const cookieCategoryInputs = cookiePreferencesModal.querySelectorAll("[data-cookie-category]");
+
+function syncCookiePreferenceInputs(record) {
+  cookieCategoryInputs.forEach((input) => {
+    input.checked = Boolean(record?.[input.dataset.cookieCategory]);
+  });
+}
+
+function applyCookieConsentState(record) {
+  cookieBanner.hidden = true;
+  cookieSettingsButton.hidden = false;
+  syncCookiePreferenceInputs(record);
+}
+
+function getCookiePreferencesFocusable() {
+  return Array.from(cookiePreferencesModal.querySelectorAll("button, input:not(:disabled)"));
+}
+
+function openCookiePreferences() {
+  syncCookiePreferenceInputs(window.bfCookieConsent || readCookieConsent() || {});
+  cookiePreferencesModal.hidden = false;
+  document.addEventListener("keydown", handleCookiePreferencesKeydown);
+  cookiePreferencesModal.querySelector(".modal-close")?.focus();
+}
+
+function closeCookiePreferences() {
+  cookiePreferencesModal.hidden = true;
+  document.removeEventListener("keydown", handleCookiePreferencesKeydown);
+}
+
+function handleCookiePreferencesKeydown(event) {
+  if (event.key === "Escape") {
+    closeCookiePreferences();
+    return;
+  }
+  if (event.key !== "Tab") return;
+
+  const focusable = getCookiePreferencesFocusable();
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+const existingCookieConsent = readCookieConsent();
+if (existingCookieConsent) {
+  window.bfCookieConsent = existingCookieConsent;
+  applyCookieConsentState(existingCookieConsent);
+} else {
+  cookieBanner.hidden = false;
+}
+
+cookieBanner.addEventListener("click", (event) => {
+  const action = event.target.closest("[data-cookie-action]")?.dataset.cookieAction;
+  if (action === "accept") {
+    applyCookieConsentState(writeCookieConsent({ preferences: true, analytics: true, marketing: true }));
+  } else if (action === "reject") {
+    applyCookieConsentState(writeCookieConsent({ preferences: false, analytics: false, marketing: false }));
+  } else if (action === "customize") {
+    openCookiePreferences();
+  }
+});
+
+cookiePreferencesModal.addEventListener("click", (event) => {
+  if (event.target === cookiePreferencesModal) {
+    closeCookiePreferences();
+    return;
+  }
+  const action = event.target.closest("[data-cookie-action]")?.dataset.cookieAction;
+  if (action === "save") {
+    const choice = {};
+    cookieCategoryInputs.forEach((input) => { choice[input.dataset.cookieCategory] = input.checked; });
+    applyCookieConsentState(writeCookieConsent(choice));
+    closeCookiePreferences();
+  } else if (action === "reject") {
+    applyCookieConsentState(writeCookieConsent({ preferences: false, analytics: false, marketing: false }));
+    closeCookiePreferences();
+  }
+});
+
+cookiePreferencesModal.querySelectorAll("[data-cookie-prefs-close]").forEach((el) => {
+  el.addEventListener("click", closeCookiePreferences);
+});
+
+cookieSettingsButton.addEventListener("click", openCookiePreferences);
