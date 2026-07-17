@@ -1,10 +1,18 @@
+/* Container pentru scanteile declansate de proximitatea cursorului (vezi
+   burst() mai jos) — creat dinamic, la fel ca modalul si bannerul de cookies,
+   in loc sa fie marcat in fiecare pagina care incarca acest script. */
+const burstLayer = document.createElement("div");
+burstLayer.id = "sparkBursts";
+burstLayer.className = "spark-bursts";
+burstLayer.setAttribute("aria-hidden", "true");
+document.body.append(burstLayer);
+
 const panels = document.querySelectorAll("[data-panel]");
 const triggers = document.querySelectorAll("[data-trigger]");
 const prevPanelButton = document.querySelector(".prev-panel");
 const nextPanelButton = document.querySelector(".next-panel");
 const panelDots = document.querySelectorAll(".panel-dots button");
 const root = document.documentElement;
-const burstLayer = document.querySelector("#sparkBursts");
 const liteMotionQuery = window.matchMedia("(max-width: 760px), (pointer: coarse), (prefers-reduced-motion: reduce)");
 let activePanel = 0;
 let lastBurst = 0;
