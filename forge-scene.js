@@ -245,6 +245,11 @@ void main(){
     let slowFrames = 0;
     let watchdogDone = false;
 
+    /* fundalul e o scena ambientala lenta, nu are nevoie de 60fps: plafonam
+       desenul la ~30fps, ceea ce injumatateste costul de composite/GPU fara
+       diferenta vizibila pentru acest tip de shimmer. */
+    const TARGET_FRAME_MS = 33;
+
     function teardown() {
       if (destroyed) return;
       destroyed = true;
@@ -258,14 +263,19 @@ void main(){
       if (destroyed) return;
       raf = requestAnimationFrame(frame);
 
-      /* watchdog: primele ~120 de cadre; dacă GPU-ul nu ține 30fps, revenim la CSS */
+      /* throttle: sarim desenul daca n-a trecut destul timp de la ultimul cadru real */
+      if (now - last < TARGET_FRAME_MS) return;
+
+      /* watchdog: primele ~40 de cadre desenate; daca GPU-ul nu tine ritmul
+         tintit (ex. randare software, fara GPU dedicat), revenim la CSS
+         rapid, nu dupa 2s+ cum era inainte. */
       if (!watchdogDone) {
         const dt = now - last;
         frames += 1;
-        if (frames > 10 && dt > 33) slowFrames += 1;
-        if (frames >= 120) {
+        if (frames > 5 && dt > TARGET_FRAME_MS * 2) slowFrames += 1;
+        if (frames >= 40) {
           watchdogDone = true;
-          if (slowFrames > 45) { teardown(); return; }
+          if (slowFrames > 15) { teardown(); return; }
         }
       }
       last = now;
