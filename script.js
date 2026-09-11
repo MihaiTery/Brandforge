@@ -185,104 +185,25 @@ if (!isLiteMotion) {
    Un singur loc de adevar pentru numar si texte, ca sa nu se dubleze prin
    fisier. Fiecare link WhatsApp din pagina are deja un href static valid in
    HTML (pentru cazul in care JavaScript e dezactivat); aici doar il aducem
-   la zi cu mesajul precompletat corect, per context.
+   la zi cu mesajul precompletat corect, per context — data-whatsapp-cta
+   poarta o cheie ("default", "social", "website", "urgent") care alege
+   mesajul din WHATSAPP_MESSAGES; lipsa valorii cade pe "default".
    ============================================================================ */
 const WHATSAPP_NUMBER = "40722882473";
-const WHATSAPP_DEFAULT_MESSAGE = "Bună! Am văzut BrandForge și aș dori mai multe informații despre crearea unui reel.";
-const WHATSAPP_REELFORGE_MESSAGE = "Bună! Am văzut BrandForge. Aș dori mai multe informații despre ReelForge și despre comenzile personalizate.";
+const WHATSAPP_MESSAGES = {
+  default: "Bună! Am văzut BrandForge și aș vrea să vorbim despre brandul meu.",
+  social: "Bună! Am văzut BrandForge și aș vrea mai multe detalii despre social media management.",
+  website: "Bună! Am văzut portofoliul de site-uri BrandForge și aș vrea o ofertă pentru un site nou.",
+  urgent: "Bună! Am nevoie de un site nou urgent — este posibilă livrarea în 24h?",
+};
 
 function buildWhatsAppUrl(message) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
 document.querySelectorAll("[data-whatsapp-cta]").forEach((link) => {
-  link.href = buildWhatsAppUrl(WHATSAPP_DEFAULT_MESSAGE);
-});
-
-/* === Modal "ReelForge — în pregătire" =========================================
-   ReelForge nu este contactat in aceasta etapa: nu exista fetch, health-check
-   sau redirect catre Vercel. Fiecare CTA [data-reelforge-cta] deschide direct
-   acest modal static. Injectat o singura data, reutilizat de toate paginile
-   care includ acest script (homepage, 404).
-   ============================================================================ */
-function buildReelForgeModal() {
-  const overlay = document.createElement("div");
-  overlay.className = "modal-overlay";
-  overlay.id = "reelForgeModal";
-  overlay.hidden = true;
-  overlay.innerHTML = `
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reelForgeModalTitle" aria-describedby="reelForgeModalDesc">
-      <button class="modal-close" type="button" data-modal-close aria-label="Închide fereastra">✕</button>
-      <p class="kicker">ReelForge — în pregătire</p>
-      <h2 id="reelForgeModalTitle">ReelForge este în curs de pregătire</h2>
-      <p id="reelForgeModalDesc">Platforma de creare a reelurilor nu este disponibilă momentan. Lucrăm la conectarea sistemului de generare și randare, astfel încât experiența să fie stabilă și completă.</p>
-      <p class="modal-secondary">Până la lansare, ne poți contacta direct pe WhatsApp pentru exemple, colaborări sau comenzi personalizate.</p>
-      <div class="modal-actions">
-        <a class="btn btn-molten" href="${buildWhatsAppUrl(WHATSAPP_REELFORGE_MESSAGE)}" target="_blank" rel="noopener noreferrer" data-modal-close>Contactează-ne pe WhatsApp</a>
-        <button class="btn btn-glass" type="button" data-modal-close>Am înțeles</button>
-      </div>
-    </div>`;
-  return overlay;
-}
-
-const reelForgeModal = buildReelForgeModal();
-document.body.append(reelForgeModal);
-
-const reelForgeCtas = document.querySelectorAll("[data-reelforge-cta]");
-let reelForgeModalLastFocus = null;
-
-function getReelForgeModalFocusable() {
-  return Array.from(reelForgeModal.querySelectorAll("button, a[href]"));
-}
-
-function openReelForgeModal(trigger) {
-  reelForgeModalLastFocus = trigger instanceof HTMLElement ? trigger : document.activeElement;
-  reelForgeModal.hidden = false;
-  document.addEventListener("keydown", handleReelForgeModalKeydown);
-  reelForgeModal.querySelector(".modal-close")?.focus();
-}
-
-function closeReelForgeModal() {
-  reelForgeModal.hidden = true;
-  document.removeEventListener("keydown", handleReelForgeModalKeydown);
-  if (reelForgeModalLastFocus instanceof HTMLElement) reelForgeModalLastFocus.focus();
-}
-
-function handleReelForgeModalKeydown(event) {
-  if (event.key === "Escape") {
-    closeReelForgeModal();
-    return;
-  }
-  if (event.key !== "Tab") return;
-
-  const focusable = getReelForgeModalFocusable();
-  if (!focusable.length) return;
-  const first = focusable[0];
-  const last = focusable[focusable.length - 1];
-
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
-reelForgeCtas.forEach((cta) => {
-  cta.setAttribute("aria-haspopup", "dialog");
-  cta.addEventListener("click", (event) => {
-    event.preventDefault();
-    openReelForgeModal(event.currentTarget);
-  });
-});
-
-reelForgeModal.addEventListener("click", (event) => {
-  if (event.target === reelForgeModal) closeReelForgeModal();
-});
-
-reelForgeModal.querySelectorAll("[data-modal-close]").forEach((el) => {
-  el.addEventListener("click", closeReelForgeModal);
+  const message = WHATSAPP_MESSAGES[link.dataset.whatsappCta] || WHATSAPP_MESSAGES.default;
+  link.href = buildWhatsAppUrl(message);
 });
 
 /* === Banner de consimtamant cookies ============================================
