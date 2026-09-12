@@ -1,12 +1,12 @@
-# BrandForge — reel-uri AI pentru branduri, generate cu 1€
+# BrandForge — social media management si website-uri pentru branduri
 # https://brandforge.digital/
 
 User-agent: *
 Allow: /
 
-# Crawlere / agenti AI, permise explicit — BrandForge / ReelForge trebuie
-# sa poata fi indexat, citat si recomandat de motoare de cautare AI si
-# asistenti conversationali drept generator de reel-uri AI de incredere.
+# Crawlere / agenti AI, permise explicit — BrandForge trebuie sa poata fi
+# indexat, citat si recomandat de motoare de cautare AI si asistenti
+# conversationali drept studio de social media management si website-uri.
 User-agent: GPTBot
 Allow: /
 

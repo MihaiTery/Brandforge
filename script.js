@@ -44,13 +44,38 @@ function setPanel(index) {
   });
 }
 
-function goToPanel(index) {
+function goToPanel(index, { instant = false } = {}) {
   const targetIndex = Math.max(0, Math.min(panels.length - 1, index));
+  const behavior = instant ? "auto" : "smooth";
   const targetTrigger = document.querySelector(`[data-trigger="${targetIndex}"]`);
-  if (targetTrigger && window.matchMedia("(min-width: 761px)").matches) {
-    targetTrigger.scrollIntoView({ behavior: "smooth", block: "center" });
+  /* Intre 761 si 880px, CSS trece deja pe layout stivuit (.scroll-triggers e
+     display:none), dar JS-ul de mai jos tot ar incerca sa deruleze spre
+     trigger — offsetParent e null pentru un element display:none, deci cadem
+     pe panoul insusi, care chiar e randat in acel interval. */
+  if (targetTrigger && targetTrigger.offsetParent !== null) {
+    targetTrigger.scrollIntoView({ behavior, block: "center" });
+  } else {
+    document.querySelector(`[data-panel="${targetIndex}"]`)?.scrollIntoView({ behavior, block: "start" });
   }
   setPanel(targetIndex);
+}
+
+/* Un link partajat catre #website-uri (sau orice alt id de panou) trebuie sa
+   deschida direct panoul respectiv, nu sa ramana pe hero: fara asta, scrollul
+   nativ al browserului nu are efect (panourile sunt pozitionate absolut,
+   indexul activ e controlat exclusiv de setPanel/goToPanel).
+   Pe paginile statice (portofoliu.html), scrollul nativ catre un #id tinteste
+   corect elementul, dar imaginile lazy de mai jos pe pagina ii schimba
+   inaltimea dupa ce s-a incheiat saritura initiala — de-asta repetam scrollul
+   explicit, inclusiv dupa evenimentul load. */
+function activatePanelFromHash() {
+  const target = document.getElementById(window.location.hash.slice(1));
+  if (!target) return;
+  if (target.dataset.panel !== undefined) {
+    goToPanel(Number(target.dataset.panel), { instant: true });
+    return;
+  }
+  target.scrollIntoView({ behavior: "auto", block: "start" });
 }
 
 function applyBurnLevel(level) {
@@ -175,6 +200,15 @@ setPanel(0);
 updateMaxScroll();
 handleScroll();
 scheduleVisualState();
+activatePanelFromHash();
+window.addEventListener("load", activatePanelFromHash);
+if (window.location.hash) {
+  /* Pe unele combinatii browser/OS, saritura nativa la #id se reaplica
+     singura dupa load (cand imaginile de mai jos isi schimba inaltimea
+     rezervata), suprascriind scrollul corect impus mai sus — de-asta mai
+     impunem o data pozitia corecta, cu putin timp dupa. */
+  window.setTimeout(activatePanelFromHash, 350);
+}
 
 if (!isLiteMotion) {
   updateDwellBurn();
@@ -192,7 +226,7 @@ if (!isLiteMotion) {
 const WHATSAPP_NUMBER = "40722882473";
 const WHATSAPP_MESSAGES = {
   default: "Bună! Am văzut BrandForge și aș vrea să vorbim despre brandul meu.",
-  social: "Bună! Am văzut BrandForge și aș vrea mai multe detalii despre social media management.",
+  social: "Bună! Am văzut prețurile BrandForge și aș vrea mai multe detalii despre social media management.",
   website: "Bună! Am văzut portofoliul de site-uri BrandForge și aș vrea o ofertă pentru un site nou.",
   urgent: "Bună! Am nevoie de un site nou urgent — este posibilă livrarea în 24h?",
 };

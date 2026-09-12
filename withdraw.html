@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Formular de retragere | BrandForge</title>
-    <meta name="description" content="Formular pregătitor de retragere dintr-o comandă BrandForge / ReelForge. Deschide aplicația ta de e-mail cu mesajul precompletat către bforge478@gmail.com.">
+    <meta name="description" content="Formular pregătitor de retragere dintr-o comandă BrandForge (social media management sau abonament de website-uri). Deschide aplicația ta de e-mail cu mesajul precompletat către bforge478@gmail.com.">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#150a05">
     <meta property="og:title" content="Formular de retragere | BrandForge">
-    <meta property="og:description" content="Formular pregătitor de retragere dintr-o comandă BrandForge / ReelForge.">
+    <meta property="og:description" content="Formular pregătitor de retragere dintr-o comandă BrandForge.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://brandforge.digital/withdraw.html">
     <meta property="og:image" content="https://brandforge.digital/brandforge/social-share.png">
@@ -29,7 +29,7 @@
       <div class="orbit-ring ring-one" aria-hidden="true"></div>
       <div class="orbit-ring ring-two" aria-hidden="true"></div>
       <a class="orbit-link orbit-brand" href="./"><span>BrandForge</span></a>
-      <a class="orbit-link orbit-reel" href="https://wa.me/40722882473?text=Bun%C4%83!%20Am%20v%C4%83zut%20BrandForge.%20A%C8%99%20dori%20mai%20multe%20informa%C8%9Bii%20despre%20ReelForge%20%C8%99i%20despre%20comenzile%20personalizate." data-reelforge-cta><span>ReelForge</span></a>
+      <a class="orbit-link orbit-work" href="./#preturi"><span>Prețuri</span></a>
       <a class="orbit-link orbit-contact" href="./#contact"><span>Contact</span></a>
     </aside>
 
@@ -38,9 +38,9 @@
         <div class="legal-intro">
           <p class="kicker">Document juridic</p>
           <h1>Formular de retragere</h1>
-          <p class="lede">Completează datele de mai jos ca să pregătești o cerere de retragere dintr-o comandă BrandForge / ReelForge. Vezi și <a href="./withdrawal-refunds.html">politica de retragere, anulare și rambursări</a>.</p>
+          <p class="lede">Completează datele de mai jos ca să pregătești o cerere de retragere dintr-o comandă BrandForge (social media management sau abonament de website-uri). Vezi și <a href="./withdrawal-refunds.html">politica de retragere, anulare și rambursări</a>.</p>
           <div class="legal-meta">
-            <span>Ultima actualizare: <strong>12 iulie 2026</strong></span>
+            <span>Ultima actualizare: <strong>12 septembrie 2026</strong></span>
             <a class="legal-back" href="./">← Înapoi la homepage</a>
           </div>
         </div>
@@ -68,14 +68,14 @@
           </label>
 
           <label for="wd-service">Serviciul comandat
-            <input type="text" id="wd-service" name="service" placeholder="ex. Reel AI — 1€" required>
+            <input type="text" id="wd-service" name="service" placeholder="ex. Social media management sau Abonament website-uri" required>
           </label>
 
           <label for="wd-notes">Observații (opțional)
             <textarea id="wd-notes" name="notes" rows="4"></textarea>
           </label>
 
-          <p class="legal-note">Declarația care va fi trimisă în numele tău: „Vă informez prin prezenta cu privire la retragerea mea din contractul referitor la serviciul digital indicat mai jos.” Nu este necesar să indici un motiv al retragerii.</p>
+          <p class="legal-note">Declarația care va fi trimisă în numele tău: „Vă informez prin prezenta cu privire la retragerea mea din contractul referitor la serviciul indicat mai jos.” Nu este necesar să indici un motiv al retragerii.</p>
 
           <label class="field-checkbox" for="wd-confirm">
             <input type="checkbox" id="wd-confirm" name="confirm" required>
@@ -133,7 +133,7 @@
           const data = new FormData(form);
           const orderNumber = String(data.get("order") || "").trim();
           const lines = [
-            "Vă informez prin prezenta cu privire la retragerea mea din contractul referitor la serviciul digital indicat mai jos.",
+            "Vă informez prin prezenta cu privire la retragerea mea din contractul referitor la serviciul indicat mai jos.",
             "",
             `Nume și prenume: ${data.get("name")}`,
             `E-mail folosit la comandă: ${data.get("email")}`,
