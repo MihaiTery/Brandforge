@@ -1593,6 +1593,15 @@ body:has(.forge-backdrop) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* Număr impar de carduri: ultimul rămâne singur pe rând, așa că îl centrăm */
+@media (min-width: 481px) {
+  .websites-grid > .website-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc((100% - var(--space-md)) / 2);
+  }
+}
+
 .website-card {
   --accent-rgb: 240, 79, 20;
   position: relative;
@@ -2722,6 +2731,7 @@ address.legal-card {
 .portfolio-case-nebi { --accent-rgb: 234, 145, 49; }
 .portfolio-case-inventorpath { --accent-rgb: 148, 163, 184; }
 .portfolio-case-citydock { --accent-rgb: 239, 68, 68; }
+.portfolio-case-fatacu4pezi { --accent-rgb: 236, 170, 196; }
 
 .portfolio-case-shot {
   overflow: hidden;
